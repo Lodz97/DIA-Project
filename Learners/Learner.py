@@ -23,13 +23,13 @@ class Learner:
     """
     def __init__(self, n_arms):
         self.__n_arms = n_arms
-        self.__round = 0
-        self.__rewards_per_arm = x = [[] for i in range(n_arms)]
-        self.__collected_rewards = np.array([])
+        self._round = 0
+        self._rewards_per_arm = x = [[] for i in range(n_arms)]
+        self._collected_rewards = np.array([])
 
     def pull_arm(self):
         pass
 
     def update_observations(self, pulled_arm, reward):
-        self.__rewards_per_arm[pulled_arm].append(reward)
-        self.__collected_rewards = np.append(self.__collected_rewards, reward)
+        self._rewards_per_arm[pulled_arm].append(reward)
+        self._collected_rewards = np.append(self._collected_rewards, reward)
