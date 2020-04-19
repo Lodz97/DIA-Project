@@ -38,3 +38,7 @@ class GPTSLearner(Learner):
     @property
     def arms(self):
         return self.__arms
+
+    @arms.setter
+    def arms(self, arms):
+        self.__arms = arms
