@@ -6,13 +6,22 @@ class BudgetEnvironment(AbstractClassEnvironment):
     """
     A class to represent the Gaussian Process between the number of click w.r.t budgets.
     The bid is fixed
-    """
 
+    Attributes
+    ----------
+    __budget: list
+        the possible budgets (arms)
+    __sigma : int
+        the noise of the process
+    __means: list
+        means of each budget value w.r.t number of clicks
+    """
     def __init__(self, budget, sigma, func):
         """
-        :param budget: the possible budgets (arms)
-        :param sigma: the noise of the process
-        :param func: a function which maps a budget value to the corresponding expected number of clicks
+        Parameters
+        ----------
+        func : method
+            maps budget values to the corresponding expected number of clicks
         """
         self.__budget = budget
         self.__sigma = sigma
@@ -20,9 +29,16 @@ class BudgetEnvironment(AbstractClassEnvironment):
 
     def round(self, pulled_arm):
         """
-        :param pulled_arm: the observed arm
-        :return: a stochastic reward given by the expected number of clicks and the noise
-        (the number of clicks is not deterministic)
+        Parameters
+        ----------
+        pulled_arm : int
+            the observed arm
+
+        Returns
+        ----------
+        float
+            a stochastic reward given by the expected number of clicks and the noise
+            (the number of clicks is not deterministic)
         """
         return np.random.normal(self.means[pulled_arm], self.sigma[pulled_arm])
 
