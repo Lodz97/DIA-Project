@@ -31,6 +31,6 @@ class GPTSLearner(Learner):
         self.__update_observations(pulled_arm, reward)
         self.__update_model()
 
-    def pull_arm(self):
+    def pull_arms(self):
         sampled_values = np.random.normal(self.__means, self.__std)
         return sampled_values
