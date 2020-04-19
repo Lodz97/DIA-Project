@@ -13,19 +13,23 @@ def parab_curve(p, d, title):
     plt.xlim(0, 50)
     plt.ylim(0, 100)
     plt.show()
+    return plot
 
 
-# European man
-p = np.array([0.0, 25.0, 50.0])
-d = np.array([100.0, 30.0, 0.0])
-parab_curve(p, d, "European man")
+def curve_man_eu():
+    # European man
+    p = np.array([0.0, 25.0, 50.0])
+    d = np.array([100.0, 30.0, 0.0])
+    return parab_curve(p, d, "European man")
 
-# USA man
-p = np.array([0.0, 25.0, 50.0])
-d = np.array([80.0, 20.0, 0.0])
-parab_curve(p, d, "USA man")
+def curve_man_usa():
+    # USA man
+    p = np.array([0.0, 25.0, 50.0])
+    d = np.array([80.0, 20.0, 0.0])
+    return parab_curve(p, d, "USA man")
 
-# Woman
-p = np.array([0.0, 25.0, 50.0])
-d = np.array([60.0, 10.0, 0.0])
-parab_curve(p, d, "Woman")
+def curve_woman():
+    # Woman
+    p = np.array([0.0, 25.0, 50.0])
+    d = np.array([60.0, 10.0, 0.0])
+    return parab_curve(p, d, "Woman")
