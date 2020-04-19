@@ -7,7 +7,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 class GPTSLearner(Learner):
     def __init__(self, n_arms, arms, noise_std):
         super.__init__(n_arms)
-        self.__arms = arms
+        self.arms = arms
         self.__means = np.zeros(n_arms)
         self.__std = np.ones(n_arms)*10
         self.__pulled_arms = []
@@ -18,13 +18,13 @@ class GPTSLearner(Learner):
 
     def __update_observations(self, arm_idx, reward):
         self.update_observations(arm_idx, reward)
-        self.__pulled_arms.append(self.__arms[arm_idx])
+        self.__pulled_arms.append(self.arms[arm_idx])
 
     def __update_model(self):
         x = np.atleast_2d(self.__pulled_arms).T
         y = self._collected_rewards
         self.__gp.fit(x, y)
-        self.__means, self.__std = self.gp.predict(np.atleast_2d(self.__arms).T, return_std=True)
+        self.__means, self.__std = self.gp.predict(np.atleast_2d(self.arms).T, return_std=True)
 
     def update(self, pulled_arm, reward):
         self._round += 1
@@ -34,3 +34,7 @@ class GPTSLearner(Learner):
     def pull_arms(self):
         sampled_values = np.random.normal(self.__means, self.__std)
         return sampled_values
+
+    @property
+    def arms(self):
+        return self.__arms
