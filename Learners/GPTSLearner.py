@@ -33,7 +33,8 @@ class GPTSLearner(Learner):
 
     def pull_arms(self):
         sampled_values = np.random.normal(self.__means, self.__std)
-        return sampled_values
+        sample_dic = {self.__arms[x]: sampled_values[x] for x in range(0, self._n_arms)}
+        return sample_dic
 
     @property
     def arms(self):
