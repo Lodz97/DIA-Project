@@ -32,5 +32,5 @@ class GPTSLearner(Learner):
         self.__update_model()
 
     def pull_arm(self):
-        sampled_values = np.random.normal(self.__means,self.__std)
-        return np.argmax(sampled_values)
+        sampled_values = np.random.normal(self.__means, self.__std)
+        return sampled_values
