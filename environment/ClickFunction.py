@@ -4,7 +4,7 @@ import numpy as np
 
 class ClickFunction:
     """
-    Class which represents that map a budget value to the corresponding expected number of clicks
+    Class which represents the function that maps a budget value to the corresponding expected number of clicks
     """
     def __init__(self, bound, slope):
         self.__bound = bound
