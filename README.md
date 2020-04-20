@@ -1,7 +1,7 @@
 # DIA-Project
 Project for the Data Intelligence Application course at Politecnico di Milano
 
-###Pricing + Advertising
+### Pricing + Advertising
 
  
 The goal is modeling a scenario in which a seller exploits advertising tools to attract more and more users to its website,
