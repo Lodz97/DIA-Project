@@ -23,7 +23,7 @@ class BudgetEnvironment(AbstractClassEnvironment):
         """
         self.__budget = budget
         self.__sigma = sigma
-        self.__means = func(budget)
+        self.__means = func.apply_func(budget)
 
     def round(self, pulled_arm):
         """
