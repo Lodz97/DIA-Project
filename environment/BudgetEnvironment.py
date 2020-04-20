@@ -18,9 +18,7 @@ class BudgetEnvironment(AbstractClassEnvironment):
     """
     def __init__(self, budget, sigma, func):
         """
-        Parameters
-        ----------
-        func : method
+        :param func: method
             maps budget values to the corresponding expected number of clicks
         """
         self.__budget = budget
@@ -29,16 +27,11 @@ class BudgetEnvironment(AbstractClassEnvironment):
 
     def round(self, pulled_arm):
         """
-        Parameters
-        ----------
-        pulled_arm : int
+        :param pulled_arm: float
             the observed arm
-
-        Returns
-        ----------
-        float
+        :return: float
             a stochastic reward given by the expected number of clicks and the noise
-            (the number of clicks is not deterministic)
+                (the number of clicks is not deterministic)
         """
         return np.random.normal(self.means[pulled_arm], self.sigma[pulled_arm])
 

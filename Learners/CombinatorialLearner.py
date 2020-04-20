@@ -25,9 +25,7 @@ class CombinatorialLearner:
 
     def collect_sample(self):
         """
-        Returns
-        ----------
-        sample : list[] (list of dictionaries)
+        :return: list[] (list of dictionaries)
             the expected number of click w.r.t the budgets for each subcampaigns
         """
         sample = []
@@ -37,9 +35,7 @@ class CombinatorialLearner:
 
     def knapsacks_solver(self):
         """
-        Returns
-        ----------
-        best_super_arm : tuple
+        :return: tuple
             the best super arm selected at the current round
         """
         samples = self.collect_sample()
@@ -55,13 +51,9 @@ class CombinatorialLearner:
 
     def get_realization(self, super_arm):
         """
-        Parameters
-        super_arm : tuple
+        :param super_arm: tuple
             best super-arm
-        ----------
-        Returns
-        ----------
-        reward : list[]
+        :return: list[]
             the reward of the arm selected (one for each sub campaign)
         """
         reward = []
@@ -72,12 +64,11 @@ class CombinatorialLearner:
     def update(self, super_arm, reward):
         """
         Updates the model
-        Parameters
-        ----------
-        super_arm : list[]
+        :param super_arm: list[]
             best super-arm
-        reward : list[]
+        :param reward: list[]
             reward of the arm selected
+        :return:
         """
         for i in range(0, len(self.__gp_learner)):
             self.__gp_learner[i].update(super_arm[i], reward[i])

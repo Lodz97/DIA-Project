@@ -6,20 +6,14 @@ class Learner:
 
     Attributes
     ----------
-
     _n_arms : str
         number of different arms the learner can pull
-
     _round : int
         value of the current round. It has to be incremented at each round of the time horizon chosen
-
     _rewards_per_arm : list
         for each arm, it stores a list of the collected reward for that specific arm
-
     _collected_rewards : numpy.array
         array storing all the rewards obtained during the time horizon (once for round) 
-
-
     """
     def __init__(self, n_arms):
         self._n_arms = n_arms
