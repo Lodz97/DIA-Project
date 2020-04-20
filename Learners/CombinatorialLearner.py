@@ -4,13 +4,13 @@ import numpy as np
 
 class CombinatorialLearner:
     """
-    A class which perform the combinatorial GP bandits for advertising
+    A class which perform the combinatorial GP bandit for advertising
     Attributes
     ----------
     __budget_env : list[] (of BudgetEnvironment)
-        represent the subcampaigns
+        represent the sub campaigns
     __gp_learner : list[] (of GPTSLearner)
-        represents the learner for each subcampaigns
+        represents the learner for each sub campaigns
     __daily_budget : float
         the total daily budget for the campaign
     """
@@ -26,7 +26,7 @@ class CombinatorialLearner:
     def collect_sample(self):
         """
         :return: list[] (list of dictionaries)
-            the expected number of click w.r.t the budgets for each subcampaigns
+            the expected number of click w.r.t the budgets for each sub campaigns
         """
         sample = []
         for gpl in self.__gp_learner:
