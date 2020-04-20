@@ -58,7 +58,7 @@ We differ the users in three classes splitting on two feature: the Country where
 
 
 |               | Class1 | Class2 | Class3 |
-| ------------- |:------:| ----- :|------: |
+| ------------- |------  | -----  |------  |
 | COUNTRY       | USA    | Europe | Any    | 
 | GENDER        | Male   | Male   | Female |
 
