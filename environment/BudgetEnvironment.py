@@ -33,12 +33,6 @@ class BudgetEnvironment(AbstractClassEnvironment):
             a stochastic reward given by the expected number of clicks and the noise
                 (the number of clicks is not deterministic)
         """
-        return np.random.normal(self.means[pulled_arm], self.sigma[pulled_arm])
+        return np.random.normal(self.__means[pulled_arm], self.__sigma[pulled_arm])
 
-    @property
-    def budget(self):
-        return self.__budget
 
-    @property
-    def means(self):
-        return self.__means
