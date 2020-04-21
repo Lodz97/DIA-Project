@@ -3,7 +3,8 @@ import matplotlib as plt
 from environment import ClickFunction, BudgetEnvironment
 from Learners import CombinatorialLearner, GPTSLearner
 import SystemConfiguration
-
+# ERROR
+# it does not compile!!!!
 if __name__ == "__main__":
 
     config = SystemConfiguration.SystemConfiguration("/../")
