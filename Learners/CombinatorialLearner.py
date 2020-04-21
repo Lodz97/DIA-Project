@@ -19,6 +19,7 @@ class CombinatorialLearner:
         self.__gp_learner = gp_learner
         self.__daily_budget = budget
         self.__super_arms = [x for x in itertools.product(*self.__set_super_arms()) if sum(x) <= self.__daily_budget]
+        self.collected_reward = []
 
     def __set_super_arms(self):
         return [x.arms for x in self.__gp_learner]
@@ -59,6 +60,7 @@ class CombinatorialLearner:
         reward = []
         for i in range(0, len(self.__budget_env)):
             reward.append(self.__budget_env[i].round(super_arm[i]))
+        self.collected_reward.append(reward)
         return reward
 
     def update(self, super_arm, reward):
@@ -72,3 +74,11 @@ class CombinatorialLearner:
         """
         for i in range(0, len(self.__gp_learner)):
             self.__gp_learner[i].update(super_arm[i], reward[i])
+
+    @property
+    def collected_reward(self):
+        return self._collected_reward
+
+    @collected_reward.setter
+    def collected_reward(self, value):
+        self._collected_reward = value

@@ -12,5 +12,29 @@
       "bound" : 200,
       "slope" : 2
     }
-  }
+  },
+  "campaign" : {
+    "sigma": 10,
+    "sub_campaign1": {
+      "min_budget": 0.0,
+      "max_budget": 1.0,
+      "n_arms": 20
+    },
+    "sub_campaign2": {
+      "min_budget": 0.0,
+      "max_budget": 1.0,
+      "n_arms": 20
+    },
+    "sub_campaign3": {
+      "min_budget": 0.0,
+      "max_budget": 1.0,
+      "n_arms": 20
+    },
+    "total_budget": 2.5
+  },
+    "Advertising_experiment2": {
+      "t_horizon" : 50,
+      "n_experiment" : 100
+    }
+
 }
