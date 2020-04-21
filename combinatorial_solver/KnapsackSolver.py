@@ -1,11 +1,11 @@
 import numpy as np
-
+from combinatorial_solver import Cell
 
 class KnapsackSolver:
 
     def __init__(self):
         self.budgets = []
-        self.sub_campaigns_matrix = []
+        self.sub_campaigns_matrix = np.array([])
 
     def __set_budgets(self, arms_dict):
         budget = [element for sublist in arms_dict for element in sublist.keys()]
@@ -25,4 +25,5 @@ class KnapsackSolver:
         self.__set_budgets(arms_dict)
         self.__create_sub_campaigns_matrix(arms_dict)
 
-        #matrix = np.empty((subcamp_matrix.shape[0] + 1, subcamp_matrix.shape[1]), dtype=Cell)
+        matrix = np.empty((self.sub_campaigns_matrix.shape[0] + 1, self.sub_campaigns_matrix.shape[1]), dtype=Cell)
+        
