@@ -27,7 +27,7 @@ class GPTSLearner(Learner):
     """
     
     def __init__(self, n_arms, arms, noise_std):
-        super.__init__(n_arms)
+        super(GPTSLearner, self).__init__(n_arms)
         self.arms = arms
         self.__means = np.zeros(n_arms)
         self.__std = np.ones(n_arms)*10
