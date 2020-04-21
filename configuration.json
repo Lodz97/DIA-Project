@@ -1,0 +1,16 @@
+{
+  "function": {
+    "func_man_eu" : {
+      "bound" : 1000,
+      "slope" : 5
+    },
+    "func_man_usa" : {
+      "bound" : 500,
+      "slope" : 3
+    },
+    "func_woman" : {
+      "bound" : 200,
+      "slope" : 2
+    }
+  }
+}
