@@ -19,6 +19,6 @@ class KnapsackSolver:
                     dct.update({b: -np.inf})
             self.sub_campaigns_matrix.append([dct[key] for key in sorted(dct.keys(), reverse=False)])
 
-
     def solve(self, arms_dict):
-        pass
+        self.__set_budgets(arms_dict)
+        self.__create_sub_campaigns_matrix(arms_dict)
