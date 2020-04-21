@@ -2,7 +2,7 @@ import Learners.Learner as Learner
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
-
+from Learners.Learner import Learner
 
 class GPTSLearner(Learner):
     """
