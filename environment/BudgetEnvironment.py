@@ -1,4 +1,4 @@
-from environment import AbstractClassEnvironment
+from environment.AbstractClassEnvironment import AbstractClassEnvironment
 import numpy as np
 
 
@@ -21,6 +21,7 @@ class BudgetEnvironment(AbstractClassEnvironment):
         :param func: method
             maps budget values to the corresponding expected number of clicks
         """
+        super().__init__()
         self.__budget = budget
         self.__sigma = sigma
         self.__means = func.apply_func(budget)
