@@ -31,7 +31,7 @@ class CombinatorialLearner:
         """
         sample = []
         for gpl in self.__gp_learner:
-            sample = sample.append(gpl.pull_arms)
+            sample.append(gpl.pull_arms)
         return sample
 
     def knapsacks_solver(self):
@@ -60,7 +60,7 @@ class CombinatorialLearner:
         reward = []
         for i in range(0, len(self.__budget_env)):
             reward.append(self.__budget_env[i].round(super_arm[i]))
-        self.collected_reward.append(reward)
+        self.collected_reward = self.collected_reward.append(reward)
         return reward
 
     def update(self, super_arm, reward):
