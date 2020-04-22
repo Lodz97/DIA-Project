@@ -9,12 +9,10 @@ class BudgetEnvironment(AbstractClassEnvironment):
 
     Attributes
     ----------
-    __budget: list
-        the possible budgets (arms)
+    __clicks_budget: dic
+        {key = the possible budgets (arms) : value = means of each budget value w.r.t number of clicks
     __sigma : int
         the noise of the process
-    __means: list
-        means of each budget value w.r.t number of clicks
     """
     def __init__(self, budget, sigma, func):
         """
@@ -22,9 +20,9 @@ class BudgetEnvironment(AbstractClassEnvironment):
             maps budget values to the corresponding expected number of clicks
         """
         super().__init__()
-        self.__budget = budget
         self.__sigma = sigma
-        self.__means = func.apply_func(budget)
+        tmp = func.apply_func(budget)
+        self.__clicks_budget = {budget[i]: tmp[i] for i in range(0, len(budget))}
 
     def round(self, pulled_arm):
         """
@@ -34,6 +32,6 @@ class BudgetEnvironment(AbstractClassEnvironment):
             a stochastic reward given by the expected number of clicks and the noise
                 (the number of clicks is not deterministic)
         """
-        return np.random.normal(self.__means[pulled_arm], self.__sigma[pulled_arm])
+        return np.random.normal(self.__clicks_budget[pulled_arm], self.__sigma)
 
 
