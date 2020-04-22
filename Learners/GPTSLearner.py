@@ -4,6 +4,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 from Learners.Learner import Learner
 
+
 class GPTSLearner(Learner):
     """
     It is the Thompson Sampling algorithm.
@@ -25,7 +26,7 @@ class GPTSLearner(Learner):
     __gp: GaussianProcessRegressor
         it is the Gaussian Process regressor itself
     """
-    
+
     def __init__(self, n_arms, arms, noise_std):
         super(GPTSLearner, self).__init__(n_arms)
         self.arms = arms
@@ -55,7 +56,7 @@ class GPTSLearner(Learner):
         x = np.atleast_2d(self.__pulled_arms).T
         y = self._collected_rewards
         self.__gp.fit(x, y)
-        self.__means, self.__std = self.gp.predict(np.atleast_2d(self.arms).T, return_std=True)
+        self.__means, self.__std = self.__gp.predict(np.atleast_2d(self.arms).T, return_std=True)
 
     def update(self, pulled_arm, reward):
         """
@@ -68,9 +69,9 @@ class GPTSLearner(Learner):
         self.__update_observations(pulled_arm, reward)
         self.__update_model()
 
+    @property
     def pull_arms(self):
         """
-
         :return:
         """
         sampled_values = np.random.normal(self.__means, self.__std)
