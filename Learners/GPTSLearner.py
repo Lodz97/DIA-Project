@@ -57,6 +57,7 @@ class GPTSLearner(Learner):
         y = self._collected_rewards
         self.__gp.fit(x, y)
         self.__means, self.__std = self.__gp.predict(np.atleast_2d(self.arms).T, return_std=True)
+        self.__std = np.maximum(self.__std, 1e-2)
 
     def update(self, pulled_arm, reward):
         """
