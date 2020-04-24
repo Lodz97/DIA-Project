@@ -25,16 +25,27 @@ class KnapsackSolver:
         self.sub_campaigns_matrix = np.array(matrix)
 
     def solve(self, arms_dict):
+        """
+        Method called to solve the combinatorial part of the learning phase.
+        It returns the best super arms found for the current round.
+
+        :param arms_dict: list of dictionaries.
+            It contains one dictionary for each sub campaign: the keys of such dictionaries are the arms of the
+            sub campaign and the values are the estimated value associated to each arm.
+
+        :return: list of float.
+            It returns a list which represents the best super arm found, which is the solution of the knapsack-like
+            problem. The list contains one arm for each sub campaign and the order matches the one which was given
+            in the arms_dict parameter.
+        """
 
         self.__create_sub_campaigns_matrix(arms_dict)
 
         matrix = self.__build_table()
-        for row in matrix:
-            print([element.value for element in row])
-        print("\n")
-        for row in matrix:
-            print([element.alloc_array for element in row])
+        last_row = [cell.value for cell in matrix[-1]]
+        idx_best = np.argmax(last_row)
 
+        return matrix[-1][idx_best].alloc_array
 
     def __build_table(self):
         table = np.empty((self.sub_campaigns_matrix.shape[0] + 1, self.sub_campaigns_matrix.shape[1]), dtype=Cell)
@@ -66,9 +77,7 @@ class KnapsackSolver:
                     cell_temp[j] = temp[i - j] + prev_row[j].value
 
                 max_index = np.argmax(cell_temp)
-                alloc = np.append(prev_row[max_index].alloc_array,
-                                                              self.budgets[i - max_index])
+                alloc = np.append(prev_row[max_index].alloc_array, self.budgets[i - max_index])
                 row = np.append(row, [Cell(cell_temp[max_index], alloc)])
 
         return row
-
