@@ -22,7 +22,7 @@ class BudgetEnvironment(AbstractClassEnvironment):
         super().__init__()
         self.__sigma = sigma
         tmp = func.apply_func(budget)
-        self.__clicks_budget = {budget[i]: tmp[i] for i in range(0, len(budget))}
+        self.clicks_budget = {budget[i]: tmp[i] for i in range(0, len(budget))}
 
     def round(self, pulled_arm):
         """
@@ -34,4 +34,10 @@ class BudgetEnvironment(AbstractClassEnvironment):
         """
         return np.random.normal(self.__clicks_budget[pulled_arm], self.__sigma)
 
+    @property
+    def clicks_budget(self):
+        return self.__clicks_budget
 
+    @clicks_budget.setter
+    def clicks_budget(self, value):
+        self.__clicks_budget = value

@@ -3,6 +3,16 @@ import matplotlib.pyplot as plt
 from environment import ClickFunction, BudgetEnvironment
 from Learners import CombinatorialLearner, GPTSLearner
 import SystemConfiguration
+from combinatorial_solver import KnapsackSolver, Cell
+
+
+def plot_regret(opt, reward_per_experiment):
+    plt.figure(0)
+    plt.ylabel("Regret")
+    plt.xlabel("t")
+
+    plt.plot(np.cumsum(np.mean(opt - reward_per_experiment, axis=0)), "r")
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -24,7 +34,7 @@ if __name__ == "__main__":
     func_c3 = ClickFunction.ClickFunction(*config.init_function("func_woman"))
 
     combinatorial_reward_experiment = []
-
+    campaign = []
     for i in range(0, config.init_advertising_experiment2()["n_experiment"]):
 
         sub_c1 = BudgetEnvironment.BudgetEnvironment(budget_sub_c1, sigma, func_c1)
@@ -46,15 +56,10 @@ if __name__ == "__main__":
 
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
 
-    #print(combinatorial_reward_experiment)
-
-    plt.figure(0)
-    plt.ylabel("Reward")
-    plt.xlabel("t")
-    tmp = np.mean(combinatorial_reward_experiment, axis=0)
-    plt.plot(tmp, "r")
-    print(tmp)
-    print("len = ")
-    print(len(tmp))
-    plt.show()
-
+    param = [campaign[0].clicks_budget, campaign[1].clicks_budget, campaign[2].clicks_budget]
+    k_sol = KnapsackSolver.KnapsackSolver(param)
+    temp = k_sol.solve(param)
+    print(temp)
+    opt = sum(
+        [campaign[0].clicks_budget[temp[0]], campaign[1].clicks_budget[temp[1]], campaign[2].clicks_budget[temp[2]]])
+    plot_regret(opt, combinatorial_reward_experiment)
