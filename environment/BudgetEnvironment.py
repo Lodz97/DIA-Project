@@ -1,4 +1,5 @@
 from environment.AbstractClassEnvironment import AbstractClassEnvironment
+from environment.ClickFunction import ClickFunction
 import numpy as np
 
 
@@ -32,7 +33,7 @@ class BudgetEnvironment(AbstractClassEnvironment):
             a stochastic reward given by the expected number of clicks and the noise
                 (the number of clicks is not deterministic)
         """
-        return np.random.normal(self.__clicks_budget[pulled_arm], self.__sigma)
+        return np.random.normal(self.clicks_budget[pulled_arm], self.__sigma)
 
     @property
     def clicks_budget(self):

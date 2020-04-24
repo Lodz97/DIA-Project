@@ -6,7 +6,7 @@ class SystemConfiguration:
     A class which set the parameters reading from configuration.json
     """
 
-    def __init__(self, path):
+    def __init__(self):
         with open("configuration.json") as json_config:
             self.__data_config = json.load(json_config)
         json_config.close()
@@ -32,5 +32,3 @@ class SystemConfiguration:
     def init_noise(self):
         return self.__data_config["campaign"]["sigma"]
 
-    def init_total_budget(self):
-        return self.__data_config["campaign"]["total_budget"]
