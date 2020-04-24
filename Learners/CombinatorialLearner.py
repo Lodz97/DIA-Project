@@ -14,11 +14,6 @@ class CombinatorialLearner:
     __daily_budget : float
         the total daily budget for the campaign
     """
-
-    @property
-    def collected_reward(self):
-        return self._collected_reward
-
     def __init__(self, budget_environments, gp_learner, budget):
         self.__budget_env = budget_environments
         self.__gp_learner = gp_learner
@@ -65,7 +60,7 @@ class CombinatorialLearner:
         reward = []
         for i in range(0, len(self.__budget_env)):
             reward.append(self.__budget_env[i].round(super_arm[i]))
-        self.collected_reward.append(reward)
+        self.collected_reward.append(sum(reward))
         return reward
 
     def update(self, super_arm, reward):

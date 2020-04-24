@@ -1,10 +1,10 @@
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from environment import ClickFunction, BudgetEnvironment
 from Learners import CombinatorialLearner, GPTSLearner
 import SystemConfiguration
-# ERROR
-# it does not compile!!!!
+
+
 if __name__ == "__main__":
 
     config = SystemConfiguration.SystemConfiguration("/../")
@@ -46,4 +46,15 @@ if __name__ == "__main__":
 
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
 
-    print(combinatorial_reward_experiment)
+    #print(combinatorial_reward_experiment)
+
+    plt.figure(0)
+    plt.ylabel("Reward")
+    plt.xlabel("t")
+    tmp = np.mean(combinatorial_reward_experiment, axis=0)
+    plt.plot(tmp, "r")
+    print(tmp)
+    print("len = ")
+    print(len(tmp))
+    plt.show()
+

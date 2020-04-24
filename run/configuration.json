@@ -34,7 +34,7 @@
   },
     "Advertising_experiment2": {
       "t_horizon" : 120,
-      "n_experiment" : 1
+      "n_experiment" : 3
     }
 
 }
