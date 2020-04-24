@@ -12,6 +12,8 @@ class KnapsackSolver:
 
     def __set_budgets(self, arms_dict):
         budget = [element for sublist in arms_dict for element in sublist.keys()]
+        if 0 not in budget:
+            budget.append(0)
         self.budgets = np.unique(budget)                              # NB np.unique already returns the array sorted
 
     def __create_sub_campaigns_matrix(self, arms_dict):
@@ -68,7 +70,7 @@ class KnapsackSolver:
 
         for i in range(0, temp.size):
             if temp[i] == prev_row[i].value and temp[i] == -np.inf:
-                row[i] = Cell(-np.inf, np.zeros(0))
+                row = np.append(row, [Cell(-np.inf, np.zeros(0))])
 
             else:
                 cell_temp = np.zeros(i+1)
