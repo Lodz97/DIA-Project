@@ -1,12 +1,13 @@
 import numpy as np
+import itertools
 from combinatorial_solver.Cell import Cell
 
 
 class KnapsackSolver:
 
     def __init__(self, arms_dict):
-        self.budgets = []
-        self.sub_campaigns_matrix = np.array([])
+        self.budgets = {}
+        self.sub_campaigns_matrix = []
 
         self.__set_budgets(arms_dict)
 
@@ -14,15 +15,20 @@ class KnapsackSolver:
         budget = [element for sublist in arms_dict for element in sublist.keys()]
         if 0 not in budget:
             budget.append(0)
-        self.budgets = np.unique(budget)                              # NB np.unique already returns the array sorted
+        budget = np.unique(budget)                              # NB np.unique already returns the array sorted
+
+        cross_prod = list(itertools.product(*[budget, budget]))
+
+        for element in budget:
+            self.budgets[element] = [comb for comb in cross_prod if np.sum(comb) == element]
 
     def __create_sub_campaigns_matrix(self, arms_dict):
         matrix = []
         for dct in arms_dict:
-            for b in self.budgets:
+            for b in self.budgets.keys():
                 if b not in dct.keys():
                     dct.update({b: -np.inf})
-            matrix.append([dct[key] for key in sorted(dct.keys(), reverse=False)])
+            matrix.append(dct)
 
         self.sub_campaigns_matrix = np.array(matrix)
 
@@ -43,43 +49,41 @@ class KnapsackSolver:
 
         self.__create_sub_campaigns_matrix(arms_dict)
 
-        matrix = self.__build_table()
-        last_row = [cell.value for cell in matrix[-1]]
-        idx_best = np.argmax(last_row)
+        row = self.__build_table()
+        for key in row.keys():
+            print(row[key].value, row[key].alloc_array)
+        #last_row = [cell.value for cell in matrix[-1]]
+        #idx_best = np.argmax(last_row)
 
-        return matrix[-1][idx_best].alloc_array, last_row[idx_best]
+        #return matrix[-1][idx_best].alloc_array, last_row[idx_best]
 
     def __build_table(self):
-        table = np.empty((self.sub_campaigns_matrix.shape[0] + 1, self.sub_campaigns_matrix.shape[1]), dtype=Cell)
+        d = self.sub_campaigns_matrix[0]
+        row = {key: Cell(d[key], np.array(key)) for key in d.keys()}
 
-        table[0] = [Cell(0, np.zeros(0)) for i in range(0, len(self.budgets))]
-        table[1] = [Cell(value, np.array([self.budgets[idx]])) for idx, value in
-                    enumerate(self.sub_campaigns_matrix[0])]
+        for sb in range(1, len(self.sub_campaigns_matrix)):
+            row = self.__build_table_row(self.sub_campaigns_matrix[sb], row)
 
-        for row in range(1, np.size(self.sub_campaigns_matrix, 0)):
-            # In prev_row we have results of previous iteration
-            prev_row = table[row]
-            temp = self.sub_campaigns_matrix[row]
-            table[row + 1] = self.__build_table_row(temp, prev_row)
-
-        return table
+        return row
 
     def __build_table_row(self, temp, prev_row):
 
-        row = np.array([])
+        row = {}
 
-        for i in range(0, temp.size):
-            if temp[i] == prev_row[i].value and temp[i] == -np.inf:
-                row = np.append(row, [Cell(-np.inf, np.zeros(0))])
+        for b in self.budgets.keys():
+            if temp[b] == prev_row[b].value and temp[b] == -np.inf:
+                row[b] = Cell(-np.inf, np.zeros(0))
 
             else:
-                cell_temp = np.zeros(i+1)
+                cell_temp = []
+                comb_tmp = []
 
-                for j in range(0, i+1):
-                    cell_temp[j] = temp[i - j] + prev_row[j].value
+                for idx, comb in enumerate(self.budgets[b]):
+                    cell_temp.append(prev_row[comb[0]].value + temp[comb[1]])
+                    comb_tmp.append(comb)
 
                 max_index = np.argmax(cell_temp)
-                alloc = np.append(prev_row[max_index].alloc_array, self.budgets[i - max_index])
-                row = np.append(row, [Cell(cell_temp[max_index], alloc)])
+                row[b] = Cell(cell_temp[max_index], np.append(prev_row[comb_tmp[max_index][0]].alloc_array,
+                                                              [comb_tmp[max_index][1]]))
 
         return row
