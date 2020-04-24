@@ -47,7 +47,7 @@ class KnapsackSolver:
         last_row = [cell.value for cell in matrix[-1]]
         idx_best = np.argmax(last_row)
 
-        return matrix[-1][idx_best].alloc_array
+        return matrix[-1][idx_best].alloc_array, last_row[idx_best]
 
     def __build_table(self):
         table = np.empty((self.sub_campaigns_matrix.shape[0] + 1, self.sub_campaigns_matrix.shape[1]), dtype=Cell)
