@@ -27,14 +27,14 @@ class GPTSLearner(Learner):
         it is the Gaussian Process regressor itself
     """
 
-    def __init__(self, n_arms, arms, noise_std):
+    def __init__(self, n_arms, arms, noise_std, kernel_theta, len_scale):
         super(GPTSLearner, self).__init__(n_arms)
         self.arms = arms
         self.__means = np.zeros(n_arms)
         self.__std = np.ones(n_arms)*10
         self.__pulled_arms = []
         self.__alpha = noise_std
-        self.__kernel = C(1.0, (1e-3, 1e3))*RBF(1.0, (1e-3, 1e3))       # TODO make the params be configurable
+        self.__kernel = C(kernel_theta, (1e-3, 1e3))*RBF(len_scale, (1e-3, 1e3))
         self.__gp = GaussianProcessRegressor(kernel=self.__kernel, alpha=self.__alpha**2, normalize_y=True,
                                              n_restarts_optimizer=9)
 

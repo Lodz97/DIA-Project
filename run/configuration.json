@@ -31,9 +31,13 @@
       "n_arms": 11
     }
   },
-    "Advertising_experiment2": {
-      "t_horizon" : 150,
-      "n_experiment" : 100
-    }
+  "Advertising_experiment2": {
+    "t_horizon" : 150,
+    "n_experiment" : 100
+  },
+  "learner" : {
+    "kernel_theta" : 1,
+    "rbf _len_scale" : 1
+  }
 
 }
