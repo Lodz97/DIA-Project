@@ -1,0 +1,43 @@
+{
+  "function": {
+    "func_man_eu" : {
+      "bound" : 1000,
+      "slope" : 0.005
+    },
+    "func_man_usa" : {
+      "bound" : 500,
+      "slope" : 0.003
+    },
+    "func_woman" : {
+      "bound" : 200,
+      "slope" : 0.002
+    }
+  },
+  "campaign" : {
+    "sigma": 10,
+    "sub_campaign1": {
+      "min_budget": 0.0,
+      "max_budget": 100.0,
+      "n_arms": 11
+    },
+    "sub_campaign2": {
+      "min_budget": 0.0,
+      "max_budget": 100.0,
+      "n_arms": 11
+    },
+    "sub_campaign3": {
+      "min_budget": 0.0,
+      "max_budget": 100.0,
+      "n_arms": 11
+    }
+  },
+  "Advertising_experiment2": {
+    "t_horizon" : 150,
+    "n_experiment" : 100
+  },
+  "learner" : {
+    "kernel_theta" : 1,
+    "rbf _len_scale" : 1
+  }
+
+}
