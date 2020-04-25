@@ -1,21 +1,12 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from environment import ClickFunction, BudgetEnvironment
 from Learners import CombinatorialLearner, GPTSLearner
 import SystemConfiguration
 from combinatorial_solver import KnapsackSolver
+import plot
 
 
-def plot_regret(opt, reward_per_experiment):
-    plt.figure(0)
-    plt.ylabel("Regret")
-    plt.xlabel("t")
-
-    plt.plot(np.cumsum(np.mean(opt - reward_per_experiment, axis=0)), "r")
-    plt.show()
-
-
-def get_opt(dic_budget):
+def get_optimum(dic_budget):
     k_sol = KnapsackSolver.KnapsackSolver(dic_budget)
     return k_sol.solve(dic_budget)[1]
 
@@ -46,9 +37,10 @@ if __name__ == "__main__":
         sub_c3 = BudgetEnvironment.BudgetEnvironment(budget_sub_c3, sigma, func_c3)
         campaign = [sub_c1, sub_c2, sub_c3]
 
-        gpts_l1 = GPTSLearner.GPTSLearner(len(budget_sub_c1), budget_sub_c1, sigma)
-        gpts_l2 = GPTSLearner.GPTSLearner(len(budget_sub_c2), budget_sub_c2, sigma)
-        gpts_l3 = GPTSLearner.GPTSLearner(len(budget_sub_c3), budget_sub_c3, sigma)
+        theta, l_scale = config.init_learner_kernel()
+        gpts_l1 = GPTSLearner.GPTSLearner(len(budget_sub_c1), budget_sub_c1, sigma, theta, l_scale)
+        gpts_l2 = GPTSLearner.GPTSLearner(len(budget_sub_c2), budget_sub_c2, sigma, theta, l_scale)
+        gpts_l3 = GPTSLearner.GPTSLearner(len(budget_sub_c3), budget_sub_c3, sigma, theta, l_scale)
         learners = [gpts_l1, gpts_l2, gpts_l3]
 
         comb_learner = CombinatorialLearner.CombinatorialLearner(campaign, learners)
@@ -61,5 +53,5 @@ if __name__ == "__main__":
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
         print(i)
 
-    optimum = get_opt([campaign[0].clicks_budget, campaign[1].clicks_budget, campaign[2].clicks_budget])
-    plot_regret(optimum, combinatorial_reward_experiment)
+    optimum = get_optimum([campaign[0].clicks_budget, campaign[1].clicks_budget, campaign[2].clicks_budget])
+    plot.plot_regret_advertising(optimum, combinatorial_reward_experiment)
