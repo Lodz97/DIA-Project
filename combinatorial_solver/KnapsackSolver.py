@@ -1,5 +1,6 @@
 import numpy as np
 import itertools
+import operator
 from combinatorial_solver.Cell import Cell
 
 
@@ -50,12 +51,10 @@ class KnapsackSolver:
         self.__create_sub_campaigns_matrix(arms_dict)
 
         row = self.__build_table()
-        for key in row.keys():
-            print(row[key].value, row[key].alloc_array)
-        #last_row = [cell.value for cell in matrix[-1]]
-        #idx_best = np.argmax(last_row)
+        n_click = {key: row[key].value for key in row.keys()}
+        max_click_key = max(n_click.items(), key=operator.itemgetter(1))[0]
 
-        #return matrix[-1][idx_best].alloc_array, last_row[idx_best]
+        return row[max_click_key].alloc_array, row[max_click_key].value
 
     def __build_table(self):
         d = self.sub_campaigns_matrix[0]
@@ -85,5 +84,12 @@ class KnapsackSolver:
                 max_index = np.argmax(cell_temp)
                 row[b] = Cell(cell_temp[max_index], np.append(prev_row[comb_tmp[max_index][0]].alloc_array,
                                                               [comb_tmp[max_index][1]]))
+        row = self.clean_row(row)
+        return row
 
+    @staticmethod
+    def clean_row(row):
+        for key in row.keys():
+            if row[key].value == -np.inf:
+                row[key].alloc_array = np.zeros(0)
         return row
