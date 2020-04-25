@@ -32,3 +32,7 @@ class SystemConfiguration:
     def init_noise(self):
         return self.__data_config["campaign"]["sigma"]
 
+    def init_learner_kernel(self):
+        theta = self.__data_config["learner"]["kernel_theta"]
+        l_scale = self.__data_config["learner"]["rbf _len_scale"]
+        return theta, l_scale
