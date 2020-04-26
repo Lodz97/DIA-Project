@@ -21,7 +21,7 @@ class ClickFunction:
     @staticmethod
     def visualize_func(budget, function):
         plt.figure()
-        plt.plot(function.apply_func(budget), 'r:', label='NumberClicks')
+        plt.plot(budget, function.apply_func(budget), 'r:', label='NumberClicks')
         plt.title("Clicks / Budget curve")
         plt.xlabel("Budget")
         plt.ylabel("Number of clicks")
