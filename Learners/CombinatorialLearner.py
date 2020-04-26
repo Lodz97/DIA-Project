@@ -32,7 +32,7 @@ class CombinatorialLearner:
         """
         sample = []
         for gpl in self.__gp_learner:
-            sample.append(gpl.pull_arms)
+            sample.append(gpl.pull_arm())
         return sample
 
     def knapsacks_solver(self):
