@@ -1,24 +1,61 @@
 {
   "function": {
     "func_man_eu" : {
-      "bound" : 900,
-      "slope" : 0.004
+      "bound" : 250,
+      "slope" : 0.03
     },
     "func_man_usa" : {
-      "bound" : 1000,
-      "slope" : 0.005
+      "bound" : 300,
+      "slope" : 0.04
     },
     "func_woman" : {
-      "bound" : 800,
-      "slope" : 0.003
+      "bound" : 150,
+      "slope" : 0.06
+    },
+    "func_man_eu_p1" : {
+      "bound" : 250,
+      "slope" : 0.03
+    },
+    "func_man_usa_p1" : {
+      "bound" : 300,
+      "slope" : 0.04
+    },
+    "func_woman_p1" : {
+      "bound" : 150,
+      "slope" : 0.06
+    },
+    "func_man_eu_p2" : {
+      "bound" : 125,
+      "slope" : 0.03
+    },
+    "func_man_usa_p2" : {
+      "bound" : 300,
+      "slope" : 0.04
+    },
+    "func_woman_p2" : {
+      "bound" : 140,
+      "slope" : 0.06
+    },
+    "func_man_eu_p3" : {
+      "bound" : 275,
+      "slope" : 0.03
+    },
+    "func_man_usa_p3" : {
+      "bound" : 350,
+      "slope" : 0.04
+    },
+    "func_woman_p3" : {
+      "bound" : 160,
+      "slope" : 0.06
     }
+
   },
   "campaign" : {
     "sigma": 0.5,
     "sub_campaign1": {
-      "min_budget": 30.0,
+      "min_budget": 10.0,
       "max_budget": 80.0,
-      "n_arms": 6
+      "n_arms": 8
     },
     "sub_campaign2": {
       "min_budget": 10.0,
