@@ -18,7 +18,7 @@ class Learner:
     def __init__(self, n_arms):
         self._n_arms = n_arms
         self._round = 0
-        self._rewards_per_arm = x = [[] for i in range(n_arms)]
+        self._rewards_per_arm = [[] for i in range(n_arms)]
         self._collected_rewards = np.array([])
 
     def pull_arm(self):

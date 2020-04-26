@@ -1,4 +1,3 @@
-import Learners.Learner as Learner
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
@@ -48,7 +47,7 @@ class GPTSLearner(Learner):
         self.update_observations(arm_idx, reward)
         self.__pulled_arms.append(self.arms[arm_idx])
 
-    def __update_model(self):
+    def _update_model(self):
         """
 
         :return:
@@ -68,10 +67,9 @@ class GPTSLearner(Learner):
         """
         self._round += 1
         self.__update_observations(pulled_arm, reward)
-        self.__update_model()
+        self._update_model()
 
-    @property
-    def pull_arms(self):
+    def pull_arm(self):
         """
         :return:
         """
