@@ -69,8 +69,7 @@ class GPTSLearner(Learner):
         self.__update_observations(pulled_arm, reward)
         self._update_model()
 
-    @property
-    def pull_arms(self):
+    def pull_arm(self):
         """
         :return:
         """
