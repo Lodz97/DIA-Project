@@ -20,7 +20,7 @@ class BudgetEnvironment(AbstractClassEnvironment):
         :param func: method
             maps budget values to the corresponding expected number of clicks
         """
-        super().__init__()
+        AbstractClassEnvironment.__init__(self)
         self.__sigma = sigma
         tmp = func.apply_func(budget)
         self.clicks_budget = {budget[i]: tmp[i] for i in range(0, len(budget))}
