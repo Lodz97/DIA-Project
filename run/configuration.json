@@ -1,43 +1,42 @@
 {
   "function": {
     "func_man_eu" : {
+      "bound" : 900,
+      "slope" : 0.004
+    },
+    "func_man_usa" : {
       "bound" : 1000,
       "slope" : 0.005
     },
-    "func_man_usa" : {
-      "bound" : 500,
-      "slope" : 0.003
-    },
     "func_woman" : {
-      "bound" : 200,
-      "slope" : 0.002
+      "bound" : 800,
+      "slope" : 0.003
     }
   },
   "campaign" : {
-    "sigma": 10,
+    "sigma": 0.5,
     "sub_campaign1": {
-      "min_budget": 0.0,
-      "max_budget": 100.0,
-      "n_arms": 11
+      "min_budget": 30.0,
+      "max_budget": 80.0,
+      "n_arms": 6
     },
     "sub_campaign2": {
-      "min_budget": 0.0,
-      "max_budget": 100.0,
-      "n_arms": 11
+      "min_budget": 10.0,
+      "max_budget": 70.0,
+      "n_arms": 7
     },
     "sub_campaign3": {
-      "min_budget": 0.0,
-      "max_budget": 100.0,
-      "n_arms": 11
+      "min_budget": 20.0,
+      "max_budget": 80.0,
+      "n_arms": 7
     }
   },
   "Advertising_experiment2": {
-    "t_horizon" : 150,
-    "n_experiment" : 100
+    "t_horizon" : 60,
+    "n_experiment" : 30
   },
   "learner" : {
     "kernel_theta" : 1,
     "rbf _len_scale" : 1
   }
-
 }
