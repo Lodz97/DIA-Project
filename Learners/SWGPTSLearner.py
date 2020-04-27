@@ -9,8 +9,8 @@ class SWGPTSLearner(GPTSLearner):
 
     def _update_model(self):
 
-        x = np.atleast_2d(self.__pulled_arms[-self.window_size:]).T
-        y = self._collected_rewards[-self.window_size]
-        self.__gp.fit(x, y)
-        self.__means, self.__std = self.__gp.predict(np.atleast_2d(self.arms).T, return_std=True)
-        self.__std = np.maximum(self.__std, 1e-2)
+        x = np.atleast_2d(self._pulled_arms[-self.window_size:]).T
+        y = self._collected_rewards[-self.window_size:]
+        self._gp.fit(x, y)
+        self._means, self._std = self._gp.predict(np.atleast_2d(self.arms).T, return_std=True)
+        self._std = np.maximum(self._std, 1e-2)
