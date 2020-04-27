@@ -72,6 +72,11 @@
     "t_horizon" : 60,
     "n_experiment" : 30
   },
+  "Advertising_experiment3": {
+    "t_horizon" : 60,
+    "n_experiment" : 30,
+    "window_size" : 20
+  },
   "learner" : {
     "kernel_theta" : 1,
     "rbf _len_scale" : 1
