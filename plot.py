@@ -18,8 +18,10 @@ def plot_regret_comparison(opt_per_phase, reward_per_experiment, sw_reward_per_e
 
     opt_per_round = np.zeros(len(reward_per_experiment[0]))
     n_phases = len(opt_per_phase)
+    phase_len = int(len(reward_per_experiment[0])/n_phases)
+
     for i in range(0, n_phases):
-        opt_per_round[i*n_phases: (i+1)*n_phases] = opt_per_phase[i]
+        opt_per_round[i*phase_len: (i+1)*phase_len] = opt_per_phase[i]
 
     cum_regret = np.cumsum(np.mean(opt_per_round - reward_per_experiment, axis=0))
     sw_cum_regret = np.cumsum(np.mean(opt_per_round - sw_reward_per_experiment, axis=0))
