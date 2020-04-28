@@ -29,6 +29,9 @@ class SystemConfiguration:
     def init_advertising_experiment2(self):
         return self.__data_config["Advertising_experiment2"]
 
+    def init_advertising_experiment3(self):
+        return self.__data_config["Advertising_experiment3"]
+
     def init_noise(self):
         return self.__data_config["campaign"]["sigma"]
 
