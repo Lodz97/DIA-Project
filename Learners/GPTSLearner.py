@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 from Learners.Learner import Learner
+from sklearn import preprocessing
 
 
 class GPTSLearner(Learner):
@@ -52,7 +53,8 @@ class GPTSLearner(Learner):
 
         :return:
         """
-        x = np.atleast_2d(self._pulled_arms).T
+        x_scaled = preprocessing.scale(self._pulled_arms)
+        x = np.atleast_2d(x_scaled).T
         y = self._collected_rewards
         self._gp.fit(x, y)
         self.__means, self.__std = self._gp.predict(np.atleast_2d(self.arms).T, return_std=True)
