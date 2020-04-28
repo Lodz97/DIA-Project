@@ -10,10 +10,11 @@ import plot
 
 def get_optimum(dic_budget):
     reward_non_stationary = []
-    k_sol = KnapsackSolver(dic_budget[0][0])
-    for x in range(0, len(dic_budget[0])):          # num of subcampaigns
-        for y in range(0, len(dic_budget)):
-            reward_non_stationary.append(k_sol.solve([dic_budget[y][x]]))
+    l_tmp = [element[0] for element in dic_budget]
+    solver = KnapsackSolver(l_tmp)
+    for idx in range(len(dic_budget[0])):
+        l_tmp = [element[idx] for element in dic_budget]
+        reward_non_stationary.append(solver.solve(l_tmp)[1])
 
     return reward_non_stationary
 
@@ -83,7 +84,6 @@ if __name__ == "__main__":
         sw_combinatorial_reward_experiment.append(sw_comb_learner.collected_reward)
         print(i)
 
-    optimum = get_optimum([campaign[0].list_clicks_budget, campaign[1].list_clicks_budget,
-                           campaign[2].list_clicks_budget])
-
+    optimum = get_optimum([campaign[0].list_clicks_budget, campaign[1].list_clicks_budget, campaign[2].list_clicks_budget])
+    print(optimum)
     plot.plot_regret_comparison(optimum, combinatorial_reward_experiment, sw_combinatorial_reward_experiment)
