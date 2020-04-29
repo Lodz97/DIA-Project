@@ -48,7 +48,7 @@ if __name__ == "__main__":
         for t in range(0, config.init_advertising_experiment2()["t_horizon"]):
             super_arm = comb_learner.knapsacks_solver()
             rewards = comb_learner.get_realization(super_arm)
-            comb_learner.update(super_arm, rewards)
+            comb_learner.update(super_arm, rewards,t)
 
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
         print(i)

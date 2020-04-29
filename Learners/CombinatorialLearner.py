@@ -56,7 +56,7 @@ class CombinatorialLearner:
         self.collected_reward.append(sum(reward))
         return reward
 
-    def update(self, super_arm, reward):
+    def update(self, super_arm, reward, t):
         """
         Updates the model
         :param super_arm: list[]
@@ -68,6 +68,10 @@ class CombinatorialLearner:
         for i in range(0, len(self.__gp_learner)):
             idx = np.where(self.__gp_learner[i].arms == super_arm[i])[0][0]     # it returns a tuple of arrays
             self.__gp_learner[i].update(idx, reward[i])
+        #if t%10 == 0:
+            #self.__gp_learner[0].plot_process("func_man_eu", t)
+            #self.__gp_learner[1].plot_process("func_man_usa", t)
+            #self.__gp_learner[2].plot_process("func_woman", t)
 
     @property
     def collected_reward(self):

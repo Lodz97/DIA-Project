@@ -3,6 +3,9 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 from Learners.Learner import Learner
 from sklearn import preprocessing
+import matplotlib.pyplot as plt
+from environment import ClickFunction
+import SystemConfiguration
 
 
 class GPTSLearner(Learner):
@@ -35,7 +38,7 @@ class GPTSLearner(Learner):
         self._pulled_arms = []
         self._alpha = noise_std
         self._kernel = C(kernel_theta, (1e-3, 1e3))*RBF(len_scale, (1e-3, 1e3))
-        self._gp = GaussianProcessRegressor(kernel=self._kernel, alpha=self._alpha**2, normalize_y=True,
+        self._gp = GaussianProcessRegressor(kernel=self._kernel, alpha=self._alpha**2, normalize_y=False,
                                             n_restarts_optimizer=9)
 
     def __update_observations(self, arm_idx, reward):
@@ -53,8 +56,8 @@ class GPTSLearner(Learner):
 
         :return:
         """
-        x_scaled = preprocessing.scale(self._pulled_arms)
-        x = np.atleast_2d(x_scaled).T
+        #x_scaled = preprocessing.scale(self._pulled_arms)
+        x = np.atleast_2d(self._pulled_arms).T
         y = self._collected_rewards
         self._gp.fit(x, y)
         self.__means, self.__std = self._gp.predict(np.atleast_2d(self.arms).T, return_std=True)
@@ -86,3 +89,23 @@ class GPTSLearner(Learner):
     @arms.setter
     def arms(self, arms):
         self.__arms = arms
+
+    def plot_process(self, function_name, t):
+        config = SystemConfiguration.SystemConfiguration()
+        func= ClickFunction.ClickFunction(*config.init_function(function_name))
+        #x_scaled = preprocessing.scale(self._pulled_arms)
+        x = np.atleast_2d(self._pulled_arms).T
+        x_pred = np.atleast_2d(self.arms).T
+        y = self._collected_rewards
+        y_predicted, sigma = self._gp.predict(x_pred, return_std=True)
+        plt.figure(t)
+        plt.plot(x_pred, func.apply_func(x_pred), 'r:', label=r'$func(x)$')
+        plt.plot(x.ravel(), y.ravel(), 'ro', label=u'Observed Clicks')
+        plt.plot(x_pred, y_predicted, 'b-', label=u'Predicted Clicks')
+        #plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
+        #         np.concatenate([y_predicted - 1.96 * sigma, (y_predicted + 1.96 * sigma)[::-1]]),
+        #         alpha=.5, fc='b', ec='None', label='95% conf interval')
+        plt.xlabel('$x$')
+        plt.ylabel('$func(x)$')
+        plt.legend(loc='lower right')
+        plt.show()
