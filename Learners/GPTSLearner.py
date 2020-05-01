@@ -33,12 +33,13 @@ class GPTSLearner(Learner):
     def __init__(self, n_arms, arms, noise_std, kernel_theta, len_scale):
         super(GPTSLearner, self).__init__(n_arms)
         self.arms = arms
+        self.scaled_arms = preprocessing.scale(arms)
         self._means = np.zeros(n_arms)
         self._std = np.ones(n_arms)*10
         self._pulled_arms = []
         self._alpha = noise_std
         self._kernel = C(kernel_theta, (1e-3, 1e3))*RBF(len_scale, (1e-3, 1e3))
-        self._gp = GaussianProcessRegressor(kernel=self._kernel, alpha=self._alpha**2, normalize_y=False,
+        self._gp = GaussianProcessRegressor(kernel=self._kernel, alpha=self._alpha**2, normalize_y=True,
                                             n_restarts_optimizer=9)
 
     def __update_observations(self, arm_idx, reward):
@@ -49,19 +50,22 @@ class GPTSLearner(Learner):
         :return:
         """
         self.update_observations(arm_idx, reward)
-        self._pulled_arms.append(self.arms[arm_idx])
+        self._pulled_arms.append(self.scaled_arms[arm_idx])
 
     def _update_model(self):
         """
 
         :return:
         """
-        #x_scaled = preprocessing.scale(self._pulled_arms)
+
+        #print(self._pulled_arms)
         x = np.atleast_2d(self._pulled_arms).T
         y = self._collected_rewards
         self._gp.fit(x, y)
-        self.__means, self.__std = self._gp.predict(np.atleast_2d(self.arms).T, return_std=True)
-        self.__std = np.maximum(self.__std, 1e-2)
+        self._means, self._std = self._gp.predict(np.atleast_2d(self.scaled_arms).T, return_std=True)
+        #print("means")
+        #print(self._means)
+        self._std = np.maximum(self._std, 1e-2)
 
     def update(self, pulled_arm, reward):
         """
@@ -79,6 +83,8 @@ class GPTSLearner(Learner):
         :return:
         """
         sampled_values = np.random.normal(self._means, self._std)
+        #print("samples")
+        #print(sampled_values)
         sample_dic = {self.__arms[x]: sampled_values[x] for x in range(0, self._n_arms)}
         return sample_dic
 
