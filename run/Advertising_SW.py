@@ -43,7 +43,8 @@ if __name__ == "__main__":
     func_c3_p1 = ClickFunction(*config.init_function("func_woman_p1"))
     func_c3_p2 = ClickFunction(*config.init_function("func_woman_p2"))
     func_c3_p3 = ClickFunction(*config.init_function("func_woman_p3"))
-
+    func_list = [[func_c1_p1, func_c2_p1, func_c3_p1], [func_c1_p2, func_c2_p2, func_c3_p2],
+                 [func_c1_p3, func_c2_p3, func_c3_p3]]
     combinatorial_reward_experiment = []
     sw_combinatorial_reward_experiment = []
     campaign = []
@@ -74,16 +75,22 @@ if __name__ == "__main__":
         for t in range(0, t_horizon):
             super_arm = comb_learner.knapsacks_solver()
             rewards = comb_learner.get_realization(super_arm)
-            comb_learner.update(super_arm, rewards)
-
+            comb_learner.update(super_arm, rewards, t)
+            #print(t)
+            #print("stat")
+            #print(super_arm)
             sw_super_arm = sw_comb_learner.knapsacks_solver()
             sw_rewards = sw_comb_learner.get_realization(sw_super_arm)
-            sw_comb_learner.update(sw_super_arm, sw_rewards)
-
+            sw_comb_learner.update(sw_super_arm, sw_rewards, t)
+            #print("non stat")
+            #print(sw_super_arm)
+            #if t % 5 == 0:
+                #tmp = 20
+                #sw_comb_learner.plot_regression(t, func_list[int(t/tmp)])
+                #comb_learner.plot_regression(t, func_list[int(t/tmp)])
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
         sw_combinatorial_reward_experiment.append(sw_comb_learner.collected_reward)
         print(i)
 
     optimum = get_optimum([campaign[0].list_clicks_budget, campaign[1].list_clicks_budget, campaign[2].list_clicks_budget])
-    print(optimum)
     plot.plot_regret_comparison(optimum, combinatorial_reward_experiment, sw_combinatorial_reward_experiment)

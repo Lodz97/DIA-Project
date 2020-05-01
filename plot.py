@@ -7,7 +7,9 @@ def plot_regret_advertising(opt, reward_per_experiment):
     plt.ylabel("Regret")
     plt.xlabel("t")
 
+    tmp = np.ones(60)*1000
     plt.plot(np.cumsum(np.mean(opt - reward_per_experiment, axis=0)), "r")
+    plt.plot(tmp, "b")
     plt.show()
 
 

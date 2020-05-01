@@ -70,12 +70,12 @@
   },
   "Advertising_experiment2": {
     "t_horizon" : 60,
-    "n_experiment" : 30
+    "n_experiment" : 25
   },
   "Advertising_experiment3": {
-    "t_horizon" : 60,
-    "n_experiment" : 25,
-    "window_size" : 20
+    "t_horizon" : 390,
+    "n_experiment" : 50,
+    "window_size" : 130
   },
   "learner" : {
     "kernel_theta" : 1,
