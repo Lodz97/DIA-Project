@@ -68,10 +68,11 @@ class CombinatorialLearner:
         for i in range(0, len(self.__gp_learner)):
             idx = np.where(self.__gp_learner[i].arms == super_arm[i])[0][0]     # it returns a tuple of arrays
             self.__gp_learner[i].update(idx, reward[i])
-        #if t%10 == 0:
-            #self.__gp_learner[0].plot_process("func_man_eu", t)
-            #self.__gp_learner[1].plot_process("func_man_usa", t)
-            #self.__gp_learner[2].plot_process("func_woman", t)
+
+    def plot_regression(self, t, func_list):
+        for idx in range(0, len(func_list)):
+            self.__gp_learner[idx].plot_process(func_list[idx], t)
+
 
     @property
     def collected_reward(self):

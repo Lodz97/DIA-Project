@@ -58,13 +58,10 @@ class GPTSLearner(Learner):
         :return:
         """
 
-        #print(self._pulled_arms)
         x = np.atleast_2d(self._pulled_arms).T
         y = self._collected_rewards
         self._gp.fit(x, y)
         self._means, self._std = self._gp.predict(np.atleast_2d(self.scaled_arms).T, return_std=True)
-        #print("means")
-        #print(self._means)
         self._std = np.maximum(self._std, 1e-2)
 
     def update(self, pulled_arm, reward):
@@ -83,8 +80,6 @@ class GPTSLearner(Learner):
         :return:
         """
         sampled_values = np.random.normal(self._means, self._std)
-        #print("samples")
-        #print(sampled_values)
         sample_dic = {self.__arms[x]: sampled_values[x] for x in range(0, self._n_arms)}
         return sample_dic
 
@@ -96,21 +91,19 @@ class GPTSLearner(Learner):
     def arms(self, arms):
         self.__arms = arms
 
-    def plot_process(self, function_name, t):
-        config = SystemConfiguration.SystemConfiguration()
-        func= ClickFunction.ClickFunction(*config.init_function(function_name))
-        #x_scaled = preprocessing.scale(self._pulled_arms)
+    def plot_process(self, func, t):
         x = np.atleast_2d(self._pulled_arms).T
-        x_pred = np.atleast_2d(self.arms).T
+        x_pred = np.atleast_2d(self.scaled_arms).T
         y = self._collected_rewards
         y_predicted, sigma = self._gp.predict(x_pred, return_std=True)
+
         plt.figure(t)
-        plt.plot(x_pred, func.apply_func(x_pred), 'r:', label=r'$func(x)$')
+        plt.plot(x_pred, func.apply_func(self.arms), 'r:', label=r'$func(x)$')
         plt.plot(x.ravel(), y.ravel(), 'ro', label=u'Observed Clicks')
         plt.plot(x_pred, y_predicted, 'b-', label=u'Predicted Clicks')
-        #plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
-        #         np.concatenate([y_predicted - 1.96 * sigma, (y_predicted + 1.96 * sigma)[::-1]]),
-        #         alpha=.5, fc='b', ec='None', label='95% conf interval')
+        plt.fill(np.concatenate([x_pred, x_pred[::-1]]),
+                 np.concatenate([y_predicted - 1.96 * sigma, (y_predicted + 1.96 * sigma)[::-1]]),
+                 alpha=.5, fc='b', ec='None', label='95% conf interval')
         plt.xlabel('$x$')
         plt.ylabel('$func(x)$')
         plt.legend(loc='lower right')
