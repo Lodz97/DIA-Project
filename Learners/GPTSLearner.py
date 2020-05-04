@@ -16,17 +16,17 @@ class GPTSLearner(Learner):
     ----------
      arms : list
         it is the list of the arms of the bandit algorithm
-    __means : numpy.array
+    _means : numpy.array
         it is the array which contains the means of the distribution associated to each arm
-    __std : numpy.array
+    _std : numpy.array
        it is the array which contains the standard deviations of the distribution associated to each arm
-    __pulled_arms : list
+    _pulled_arms : list
         it is a list of the arms pulled during the learning process( they are stored in chronological order)
-    __alpha : float
+    _alpha : float
         it is the standard deviation of the noise affecting the data
-    __kernel :
+    _kernel :
         it is the kernel of the Gaussian Process
-    __gp: GaussianProcessRegressor
+    _gp: GaussianProcessRegressor
         it is the Gaussian Process regressor itself
     """
 
@@ -45,8 +45,10 @@ class GPTSLearner(Learner):
     def __update_observations(self, arm_idx, reward):
         """
 
-        :param arm_idx:
-        :param reward:
+        :param arm_idx: int
+            it is the index associated to the arm pulled in the current round
+        :param reward:float
+            it is the reward associated to the arm, specified through its index, pulled in the current round
         :return:
         """
         self.update_observations(arm_idx, reward)
@@ -54,8 +56,8 @@ class GPTSLearner(Learner):
 
     def _update_model(self):
         """
-
-        :return:
+        Method which  updates the Gaussian process regressor after having observed new samples.
+        This method is called once for each round.
         """
 
         x = np.atleast_2d(self._pulled_arms).T
@@ -66,10 +68,14 @@ class GPTSLearner(Learner):
 
     def update(self, pulled_arm, reward):
         """
+        Method which updates the learner at each round : it updates the observations by adding the newly observed
+        samples and fits the regressor ( GP process) with the updated observations.
 
-        :param pulled_arm:
-        :param reward:
-        :return:
+        :param pulled_arm: int
+            it is the index of the arm pulled at the current round
+        :param reward: float
+            it is the reward observed for the pulled arm in the current round
+
         """
         self._round += 1
         self.__update_observations(pulled_arm, reward)
@@ -77,7 +83,9 @@ class GPTSLearner(Learner):
 
     def pull_arm(self):
         """
-        :return:
+        Method which pulls all the arms to extract a sample for each one of them.
+        :return: dict
+            It is a dictionary which associates to each arm value (keys), the corresponding sample drawn.
         """
         sampled_values = np.random.normal(self._means, self._std)
         sample_dic = {self.__arms[x]: sampled_values[x] for x in range(0, self._n_arms)}
@@ -92,6 +100,14 @@ class GPTSLearner(Learner):
         self.__arms = arms
 
     def plot_process(self, func, t):
+        """
+        Methods which plots the regression obtained at time t, together with the confidence interval at 95%.
+
+        :param func: ClickFunction
+            It is the true function which has to be estimated
+        :param t: int
+            It is the value of the current round t
+        """
         x = np.atleast_2d(self._pulled_arms).T
         x_pred = np.atleast_2d(self.scaled_arms).T
         y = self._collected_rewards
