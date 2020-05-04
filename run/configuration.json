@@ -69,8 +69,8 @@
     }
   },
   "Advertising_experiment2": {
-    "t_horizon" : 60,
-    "n_experiment" : 25
+    "t_horizon" : 150,
+    "n_experiment" : 100
   },
   "Advertising_experiment3": {
     "t_horizon" : 390,
