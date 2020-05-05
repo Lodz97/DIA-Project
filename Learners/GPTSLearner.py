@@ -108,9 +108,8 @@ class GPTSLearner(Learner):
         :param t: int
             It is the value of the current round t
         """
-        x = np.atleast_2d(self._pulled_arms).T
+        x, y = self.observed_clicks()
         x_pred = np.atleast_2d(self.scaled_arms).T
-        y = self._collected_rewards
         y_predicted, sigma = self._gp.predict(x_pred, return_std=True)
 
         plt.figure(t)
@@ -124,3 +123,8 @@ class GPTSLearner(Learner):
         plt.ylabel('$func(x)$')
         plt.legend(loc='lower right')
         plt.show()
+
+    def observed_clicks(self):
+        x = np.atleast_2d(self._pulled_arms).T
+        y = self._collected_rewards
+        return x, y
