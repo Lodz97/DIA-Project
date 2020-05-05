@@ -24,9 +24,9 @@ if __name__ == "__main__":
 
     sigma = config.init_noise()
 
-    func_c1 = ClickFunction.ClickFunction(*config.init_function("func_man_eu"))
-    func_c2 = ClickFunction.ClickFunction(*config.init_function("func_man_usa"))
-    func_c3 = ClickFunction.ClickFunction(*config.init_function("func_woman"))
+    func_c1 = ClickFunction.ClickFunction(*config.init_function("func_man_eu_p1"))
+    func_c2 = ClickFunction.ClickFunction(*config.init_function("func_man_usa_p1"))
+    func_c3 = ClickFunction.ClickFunction(*config.init_function("func_woman_p1"))
 
     combinatorial_reward_experiment = []
     campaign = []
@@ -49,7 +49,8 @@ if __name__ == "__main__":
             super_arm = comb_learner.knapsacks_solver()
             rewards = comb_learner.get_realization(super_arm)
             comb_learner.update(super_arm, rewards,t)
-
+            if t % 10 == 0:
+                comb_learner.plot_regression(t, [func_c1,func_c2,func_c3])
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
         print(i)
 

@@ -33,27 +33,22 @@ if __name__ == "__main__":
     sigma = config.init_noise()
     t_horizon = config.init_advertising_experiment3()["t_horizon"]
     n_experiment = config.init_advertising_experiment3()["n_experiment"]
-    window_size = int(np.sqrt(t_horizon))
-    func_c1_p1 = ClickFunction(*config.init_function("func_man_eu_p1"))
-    func_c1_p2 = ClickFunction(*config.init_function("func_man_eu_p2"))
-    func_c1_p3 = ClickFunction(*config.init_function("func_man_eu_p3"))
-    func_c2_p1 = ClickFunction(*config.init_function("func_man_usa_p1"))
-    func_c2_p2 = ClickFunction(*config.init_function("func_man_usa_p2"))
-    func_c2_p3 = ClickFunction(*config.init_function("func_man_usa_p3"))
-    func_c3_p1 = ClickFunction(*config.init_function("func_woman_p1"))
-    func_c3_p2 = ClickFunction(*config.init_function("func_woman_p2"))
-    func_c3_p3 = ClickFunction(*config.init_function("func_woman_p3"))
-    func_list = [[func_c1_p1, func_c2_p1, func_c3_p1], [func_c1_p2, func_c2_p2, func_c3_p2],
-                 [func_c1_p3, func_c2_p3, func_c3_p3]]
+    # TODO
+    # must window size be multiplied by the number of phases????
+    window_size = 3*int(np.sqrt(t_horizon))
+
+    func_list1 = config.function()
+    function_plot = ClickFunction.function_list_by_phase(func_list1)
+    
     combinatorial_reward_experiment = []
     sw_combinatorial_reward_experiment = []
     campaign = []
 
     for i in range(0, n_experiment):
 
-        sub_c1 = NonStationaryBudgetEnvironment(budget_sub_c1, sigma, [func_c1_p1, func_c1_p2, func_c1_p3], t_horizon)
-        sub_c2 = NonStationaryBudgetEnvironment(budget_sub_c2, sigma, [func_c2_p1, func_c2_p2, func_c2_p3], t_horizon)
-        sub_c3 = NonStationaryBudgetEnvironment(budget_sub_c3, sigma, [func_c3_p1, func_c3_p2, func_c3_p3], t_horizon)
+        sub_c1 = NonStationaryBudgetEnvironment(budget_sub_c1, sigma, func_list1[0], t_horizon)
+        sub_c2 = NonStationaryBudgetEnvironment(budget_sub_c2, sigma, func_list1[1], t_horizon)
+        sub_c3 = NonStationaryBudgetEnvironment(budget_sub_c3, sigma, func_list1[2], t_horizon)
 
         campaign = [sub_c1, sub_c2, sub_c3]
         theta, l_scale = config.init_learner_kernel()
@@ -76,18 +71,15 @@ if __name__ == "__main__":
             super_arm = comb_learner.knapsacks_solver()
             rewards = comb_learner.get_realization(super_arm)
             comb_learner.update(super_arm, rewards, t)
-            #print(t)
-            #print("stat")
-            #print(super_arm)
             sw_super_arm = sw_comb_learner.knapsacks_solver()
             sw_rewards = sw_comb_learner.get_realization(sw_super_arm)
             sw_comb_learner.update(sw_super_arm, sw_rewards, t)
             #print("non stat")
             #print(sw_super_arm)
-            #if t % 5 == 0:
-                #tmp = 20
-                #sw_comb_learner.plot_regression(t, func_list[int(t/tmp)])
-                #comb_learner.plot_regression(t, func_list[int(t/tmp)])
+            if t % 20 == 0:
+                tmp = 40
+                sw_comb_learner.plot_regression(t, function_plot[int(t/tmp)])
+                #comb_learner.plot_regression(t, function_plot[int(t/tmp)])
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
         sw_combinatorial_reward_experiment.append(sw_comb_learner.collected_reward)
         print(i)

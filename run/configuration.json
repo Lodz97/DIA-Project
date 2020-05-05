@@ -1,48 +1,50 @@
 {
   "function": {
-    "func_man_eu" : {
+    "func_man_eu": {
+      "bound": 250,
+      "slope": 0.03
+    },
+    "func_man_usa": {
+      "bound": 300,
+      "slope": 0.04
+    },
+    "func_woman": {
+      "bound": 150,
+      "slope": 0.06
+    }
+  },
+  "function_sw": {
+    "func_man_eu_p1" : {
       "bound" : 250,
       "slope" : 0.03
     },
-    "func_man_usa" : {
-      "bound" : 300,
-      "slope" : 0.04
+    "func_man_eu_p2" : {
+      "bound" : 125,
+      "slope" : 0.03
     },
-    "func_woman" : {
-      "bound" : 150,
-      "slope" : 0.06
-    },
-    "func_man_eu_p1" : {
-      "bound" : 250,
+    "func_man_eu_p3" : {
+      "bound" : 275,
       "slope" : 0.03
     },
     "func_man_usa_p1" : {
       "bound" : 300,
       "slope" : 0.04
     },
-    "func_woman_p1" : {
-      "bound" : 150,
-      "slope" : 0.06
-    },
-    "func_man_eu_p2" : {
-      "bound" : 125,
-      "slope" : 0.03
-    },
     "func_man_usa_p2" : {
       "bound" : 300,
       "slope" : 0.04
     },
-    "func_woman_p2" : {
-      "bound" : 140,
-      "slope" : 0.06
-    },
-    "func_man_eu_p3" : {
-      "bound" : 275,
-      "slope" : 0.03
-    },
     "func_man_usa_p3" : {
       "bound" : 350,
       "slope" : 0.04
+    },
+    "func_woman_p1" : {
+      "bound" : 150,
+      "slope" : 0.06
+    },
+    "func_woman_p2" : {
+      "bound" : 140,
+      "slope" : 0.06
     },
     "func_woman_p3" : {
       "bound" : 160,
@@ -51,7 +53,7 @@
 
   },
   "campaign" : {
-    "sigma": 0.5,
+    "sigma": 1,
     "sub_campaign1": {
       "min_budget": 10.0,
       "max_budget": 80.0,
@@ -69,13 +71,13 @@
     }
   },
   "Advertising_experiment2": {
-    "t_horizon" : 150,
+    "t_horizon" : 120,
     "n_experiment" : 100
   },
   "Advertising_experiment3": {
-    "t_horizon" : 390,
+    "t_horizon" : 120,
     "n_experiment" : 50,
-    "window_size" : 130
+    "window_size" : 40
   },
   "learner" : {
     "kernel_theta" : 1,

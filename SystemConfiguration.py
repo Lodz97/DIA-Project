@@ -1,5 +1,5 @@
 import json
-
+from environment import ClickFunction
 
 class SystemConfiguration:
     """
@@ -16,8 +16,18 @@ class SystemConfiguration:
         :param function_name : str, name of the function selected
         :return: tuple = (bound, slope), the parameters of the function
         """
-        return (self.__data_config["function"][function_name]["bound"],
-                self.__data_config["function"][function_name]["slope"])
+        return (self.__data_config["function_sw"][function_name]["bound"],
+                self.__data_config["function_sw"][function_name]["slope"])
+
+    def function(self,):
+        func_dic = self.__data_config["function_sw"]
+        tmp_list = []
+        function_list = []
+        for el in func_dic:
+            tmp_list.append(ClickFunction.ClickFunction(func_dic[el]["bound"], func_dic[el]["slope"]))
+        for i in range(0, 9, 3):
+            function_list.append([tmp_list[i], tmp_list[i+1], tmp_list[i+2]])
+        return function_list
 
     def init_sub_campaign(self, sub_campaign):
         """
