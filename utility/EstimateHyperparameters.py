@@ -25,7 +25,3 @@ class EstimateHyperparameters():
 
     def get_parameters(self):
         return self.__gp.kernel_.get_params()
-
-    def write_param(string):
-        file1 = open("parameters.txt", "w")
-        file1.write(string)
