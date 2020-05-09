@@ -21,7 +21,7 @@ def get_optimum(dic_budget):
 
 if __name__ == "__main__":
 
-    config = SystemConfiguration.SystemConfiguration()
+    config = SystemConfiguration.SystemConfiguration("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/run/")
 
     param_sub_c1 = config.init_sub_campaign("sub_campaign1")
     budget_sub_c1 = np.linspace(param_sub_c1["min_budget"], param_sub_c1["max_budget"], param_sub_c1["n_arms"])
@@ -33,12 +33,11 @@ if __name__ == "__main__":
     sigma = config.init_noise()
     t_horizon = config.init_advertising_experiment3()["t_horizon"]
     n_experiment = config.init_advertising_experiment3()["n_experiment"]
-    # TODO
-    # must window size be multiplied by the number of phases????
+
     window_size = 3*int(np.sqrt(t_horizon))
 
     func_list1 = config.function()
-    function_plot = ClickFunction.function_list_by_phase(func_list1)
+    function_plot = config.function_list_by_phase(func_list1)
     
     combinatorial_reward_experiment = []
     sw_combinatorial_reward_experiment = []

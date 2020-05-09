@@ -15,7 +15,7 @@ def get_optimum(dic_budget, cumulative_budget):
 
 if __name__ == "__main__":
 
-    config = SystemConfiguration.SystemConfiguration()
+    config = SystemConfiguration.SystemConfiguration("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/run/")
 
     param_sub_c1 = config.init_sub_campaign("sub_campaign1")
     budget_sub_c1 = np.linspace(param_sub_c1["min_budget"], param_sub_c1["max_budget"], param_sub_c1["n_arms"])

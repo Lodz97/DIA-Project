@@ -1,13 +1,14 @@
 import json
 from environment import ClickFunction
 
+
 class SystemConfiguration:
     """
     A class which set the parameters reading from configuration.json
     """
 
-    def __init__(self):
-        with open("configuration.json") as json_config:
+    def __init__(self, path):
+        with open(path+"configuration.json") as json_config:
             self.__data_config = json.load(json_config)
         json_config.close()
 
@@ -49,3 +50,23 @@ class SystemConfiguration:
         theta = self.__data_config["learner"]["kernel_theta"]
         l_scale = self.__data_config["learner"]["rbf _len_scale"]
         return theta, l_scale
+
+    def function_name(self):
+        """
+        :return: The name of the function of the advertising experiment
+        """
+        name = []
+        for key in self.__data_config["function_sw"]:
+            name.append(key)
+        return name
+
+    @staticmethod
+    def function_list_by_phase(f_list):
+        function_plot = []
+        for i in range(0, 3):
+            tmp = []
+            tmp.append(f_list[0][i])
+            tmp.append(f_list[1][i])
+            tmp.append(f_list[2][i])
+            function_plot.append(tmp)
+        return function_plot

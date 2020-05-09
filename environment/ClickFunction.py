@@ -19,17 +19,6 @@ class ClickFunction:
         return (1 - np.exp(- self.__slope * x)) * self.__bound
 
     @staticmethod
-    def function_list_by_phase(f_list):
-        function_plot = []
-        for i in range(0, 3):
-            tmp = []
-            tmp.append(f_list[0][i])
-            tmp.append(f_list[1][i])
-            tmp.append(f_list[2][i])
-            function_plot.append(tmp)
-        return function_plot
-
-    @staticmethod
     def visualize_func(budget, function):
         plt.figure()
         plt.plot(budget, function.apply_func(budget), 'r:', label='NumberClicks')
