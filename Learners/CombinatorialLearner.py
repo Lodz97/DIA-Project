@@ -1,6 +1,6 @@
 import itertools
 import numpy as np
-from combinatorial_solver import KnapsackSolver
+from combinatorial_solver.KnapsackSolver import KnapsackSolver
 
 
 class CombinatorialLearner:
@@ -16,11 +16,11 @@ class CombinatorialLearner:
     __collected_reward : list
         total reward of the campaign
     """
-    def __init__(self, budget_environments, gp_learner):
+    def __init__(self, budget_environments, gp_learner, cum_budget):
         self.__budget_env = budget_environments
         self.__gp_learner = gp_learner
         self.collected_reward = []
-        self.__knapsacks_solver = KnapsackSolver.KnapsackSolver([x.clicks_budget for x in budget_environments])
+        self.__knapsacks_solver = KnapsackSolver([x.clicks_budget for x in budget_environments], cum_budget)
 
     def __set_super_arms(self):
         return [x.arms for x in self.__gp_learner]

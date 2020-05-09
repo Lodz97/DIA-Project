@@ -6,9 +6,11 @@ from combinatorial_solver import KnapsackSolver
 import plot
 
 
-def get_optimum(dic_budget):
-    k_sol = KnapsackSolver.KnapsackSolver(dic_budget)
-    return k_sol.solve(dic_budget)[1]
+def get_optimum(dic_budget, cumulative_budget):
+    k_sol = KnapsackSolver.KnapsackSolver(dic_budget, cumulative_budget)
+    tmp = k_sol.solve(dic_budget)
+    print(tmp[0])
+    return tmp[1]
 
 
 if __name__ == "__main__":
@@ -28,6 +30,9 @@ if __name__ == "__main__":
     func_c2 = ClickFunction.ClickFunction(*config.init_function("func_man_usa_p1"))
     func_c3 = ClickFunction.ClickFunction(*config.init_function("func_woman_p1"))
 
+    experiment_params = config.init_advertising_experiment2()
+    t_horizon = experiment_params["t_horizon"]
+    cum_budget = experiment_params["cumulative_budget"]
     combinatorial_reward_experiment = []
     campaign = []
     for i in range(0, config.init_advertising_experiment2()["n_experiment"]):
@@ -43,16 +48,17 @@ if __name__ == "__main__":
         gpts_l3 = GPTSLearner.GPTSLearner(len(budget_sub_c3), budget_sub_c3, sigma, theta, l_scale)
         learners = [gpts_l1, gpts_l2, gpts_l3]
 
-        comb_learner = CombinatorialLearner.CombinatorialLearner(campaign, learners)
+        comb_learner = CombinatorialLearner.CombinatorialLearner(campaign, learners, cum_budget)
 
-        for t in range(0, config.init_advertising_experiment2()["t_horizon"]):
+        for t in range(0, t_horizon):
             super_arm = comb_learner.knapsacks_solver()
             rewards = comb_learner.get_realization(super_arm)
             comb_learner.update(super_arm, rewards,t)
-            if t % 10 == 0:
-                comb_learner.plot_regression(t, [func_c1,func_c2,func_c3])
+            #if t % 10 == 0:
+            #    comb_learner.plot_regression(t, [func_c1,func_c2,func_c3])
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
         print(i)
 
-    optimum = get_optimum([campaign[0].clicks_budget, campaign[1].clicks_budget, campaign[2].clicks_budget])
+    optimum = get_optimum([campaign[0].clicks_budget, campaign[1].clicks_budget, campaign[2].clicks_budget], cum_budget)
+    print(optimum)
     plot.plot_regret_advertising(optimum, combinatorial_reward_experiment)
