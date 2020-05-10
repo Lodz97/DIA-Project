@@ -127,10 +127,10 @@ class KnapsackSolver:
         row = {}
 
         for b in self.budgets.keys():
-            #if temp[b] == prev_row[b].value and temp[b] == -np.inf:
+            if temp[b] == prev_row[b].value and temp[b] == -np.inf:
                 row[b] = Cell(-np.inf, np.zeros(0))
 
-            #else:
+            else:
                 cell_temp = []
                 comb_tmp = []
 

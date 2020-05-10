@@ -1,4 +1,4 @@
-import SystemConfiguration
+from configuration import SysConfAdvSW
 from itertools import chain
 from utility import EstimateHyperparameters
 """
@@ -14,10 +14,11 @@ def write_param(string_param):
 
 if __name__ == '__main__':
 
-    config = SystemConfiguration.SystemConfiguration("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/run/")
+    config = SysConfAdvSW.SysConfAdvSW("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
     func_list = list(chain(*config.function()))
     sigma = config.init_noise()
     name = config.function_name()
+    print(len(name))
     string = ''
 
     for i in range(0, len(func_list)):

@@ -4,8 +4,6 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 from Learners.Learner import Learner
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
-from environment import ClickFunction
-import SystemConfiguration
 
 
 class GPTSLearner(Learner):
@@ -40,7 +38,7 @@ class GPTSLearner(Learner):
         self._alpha = noise_std
         self._kernel = C(kernel_theta, (1e-3, 1e3))*RBF(len_scale, (1e-3, 1e3))
         self._gp = GaussianProcessRegressor(kernel=self._kernel, alpha=self._alpha**2, normalize_y=True,
-                                            n_restarts_optimizer=9)
+                                            n_restarts_optimizer=0, optimizer=None)
 
     def __update_observations(self, arm_idx, reward):
         """
