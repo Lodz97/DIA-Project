@@ -8,7 +8,7 @@ import plot
 
 
 def get_optimum(dic_budget, cum_budget):
-    print(dic_budget)
+    #print(dic_budget)
     reward_non_stationary = []
     l_tmp = [element[0] for element in dic_budget]
     solver = KnapsackSolver(l_tmp, cum_budget)
@@ -21,10 +21,10 @@ def get_optimum(dic_budget, cum_budget):
 
 if __name__ == "__main__":
 
-    config = SysConfAdvSW.SysConfAdvSW("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    config = SysConfAdvSW.SysConfAdvSW("/home/mattia/PyProjects/DIA-Project/configuration/")
     sigma = config.init_noise()
     experiment_params = config.init_advertising_experiment()
-    window_size = 3*int(np.sqrt(experiment_params["t_horizon"]))
+    window_size = 4*int(np.sqrt(experiment_params["t_horizon"]))
 
     kernel = config.init_learner_kernel()
     budget = config.budget_sub_campaign()
@@ -67,5 +67,5 @@ if __name__ == "__main__":
 
     optimum = get_optimum([campaign[0].list_clicks_budget, campaign[1].list_clicks_budget,
                            campaign[2].list_clicks_budget], experiment_params["cum_budget"])
-    print(optimum)
+     #print(optimum)
     plot.plot_regret_comparison(optimum, combinatorial_reward_experiment, sw_combinatorial_reward_experiment)
