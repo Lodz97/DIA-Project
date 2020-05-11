@@ -14,6 +14,7 @@ class SWGPTSLearner(GPTSLearner):
         self._gp.fit(x, y)
         self._means, self._std = self._gp.predict(np.atleast_2d(self.scaled_arms).T, return_std=True)
         self._std = np.maximum(self._std, 1e-2)
+        self._std = np.minimum(self._std, self._noise)
 
     def observed_clicks(self):
         x = np.atleast_2d(self._pulled_arms[-self.window_size:]).T

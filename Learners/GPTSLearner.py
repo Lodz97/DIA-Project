@@ -39,6 +39,7 @@ class GPTSLearner(Learner):
         self._kernel = C(kernel_theta, (1e-3, 1e3))*RBF(len_scale, (1e-3, 1e3))
         self._gp = GaussianProcessRegressor(kernel=self._kernel, alpha=self._alpha**2, normalize_y=True,
                                             n_restarts_optimizer=0, optimizer=None)
+        self._noise = noise_std
 
     def __update_observations(self, arm_idx, reward):
         """
@@ -63,6 +64,7 @@ class GPTSLearner(Learner):
         self._gp.fit(x, y)
         self._means, self._std = self._gp.predict(np.atleast_2d(self.scaled_arms).T, return_std=True)
         self._std = np.maximum(self._std, 1e-2)
+        self._std = np.minimum(self._std, self._noise)
 
     def update(self, pulled_arm, reward):
         """
