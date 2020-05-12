@@ -24,7 +24,7 @@ if __name__ == "__main__":
     config = SysConfAdvSW.SysConfAdvSW("/home/mattia/PyProjects/DIA-Project/configuration/")
     sigma = config.init_noise()
     experiment_params = config.init_advertising_experiment()
-    window_size = 4*int(np.sqrt(experiment_params["t_horizon"]))
+    window_size = 5*int(np.sqrt(experiment_params["t_horizon"]))
 
     kernel = config.init_learner_kernel()
     budget = config.budget_sub_campaign()
