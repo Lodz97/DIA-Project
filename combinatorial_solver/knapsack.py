@@ -1,16 +1,24 @@
 from combinatorial_solver.KnapsackSolver import KnapsackSolver
-import  KS
-
+from environment.ClickFunction import ClickFunction
+import numpy as np
 
 if __name__ == "__main__":
-    d = {30: 110.97, 40: 130.67 , 50: 145.27 , 60: 156.08, 70: 164.1, 80: 170.03}
-    d1 = {10: 74.17, 20: 123.9, 30: 157.23, 40: 179.57, 50: 194.54, 60: 204.58, 70: 211.31}
-    d2 = {20: 97.83, 30: 116.85, 40: 127.29 , 50: 133.02, 60: 136.17, 70: 137.9, 80: 138.84}
+
+    func = ClickFunction(350, 0.06)
+    func1 = ClickFunction(100, 0.04)
+    func2 = ClickFunction(100, 0.03)
+    b = np.linspace(10,80,8)
+    b1 = np.linspace(10,70,7)
+    b2 = np.linspace(20,80,7)
+    v = func.apply_func(np.linspace(10,80,8))
+    v1 = func1.apply_func(np.linspace(10,70,7))
+    v2 = func2.apply_func(np.linspace(20, 80, 7))
+    d = {b[i]: v[i] for i in range(len(b))}
+    d1 = {b1[i]: v1[i] for i in range(len(b1))}
+    d2 = {b2[i]: v2[i] for i in range(len(b2))}
     l = [d, d1, d2]
-    ksol = KS.KnapsackSolver(l)
-    solver = KnapsackSolver(l)
+    solver = KnapsackSolver(l,150)
     print(solver.solve(l))
-    print(ksol.solve(l))
 
 
 
