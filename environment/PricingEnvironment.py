@@ -1,9 +1,11 @@
-from environment import AbstractClassEnvironment
+from environment.AbstractClassEnvironment import AbstractClassEnvironment
 import numpy as np
 
 
-class PricingEnvironment:
+class PricingEnvironment(AbstractClassEnvironment):
     def __init__(self, n_arms, probabilities):
+        
+        AbstractClassEnvironment.__init__(self)
         self.n_arms = n_arms
         self.probabilities = probabilities
 
