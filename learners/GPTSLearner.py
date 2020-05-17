@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
-from Learners.Learner import Learner
+from learners.Learner import Learner
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
 

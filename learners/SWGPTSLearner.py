@@ -1,4 +1,4 @@
-from Learners.GPTSLearner import *
+from learners.GPTSLearner import *
 
 
 class SWGPTSLearner(GPTSLearner):
