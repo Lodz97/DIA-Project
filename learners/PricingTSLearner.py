@@ -1,4 +1,4 @@
-from learners import Learner
+from learners.Learner import Learner
 import numpy as np
 
 
@@ -12,7 +12,7 @@ class PricingTSLearner(Learner):
         marginal profit
     """
     def __init__(self, n_arms, profit_array):
-        super().__init__(n_arms)
+        super(PricingTSLearner, self).__init__(n_arms)
         self.beta_parameters = np.ones((n_arms, 2))
         self.profit_array = profit_array
 

@@ -47,8 +47,8 @@ if __name__ == "__main__":
             reward = env.round(pulled_arm)
             gr_learner.update(pulled_arm, reward)
 
-        ts_rewards_per_experiment.append(ts_learner.collected_rewards)
-        gr_rewards_per_experiment.append(gr_learner.collected_rewards)
+        ts_rewards_per_experiment.append(ts_learner._collected_rewards)
+        gr_rewards_per_experiment.append(gr_learner._collected_rewards)
 
     plt.figure(0)
     plt.ylabel("Regret")
