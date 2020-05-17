@@ -1,5 +1,4 @@
 from environment.AbstractClassEnvironment import AbstractClassEnvironment
-from environment.ClickFunction import ClickFunction
 import numpy as np
 
 

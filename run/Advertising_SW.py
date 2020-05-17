@@ -1,6 +1,5 @@
-import SystemConfiguration
+from configuration import SysConfAdvSW
 import numpy as np
-from environment.ClickFunction import ClickFunction
 from environment.NonStationaryBudgetEnvironment import NonStationaryBudgetEnvironment
 from Learners import GPTSLearner, SWGPTSLearner
 from combinatorial_solver.KnapsackSolver import KnapsackSolver
@@ -8,10 +7,11 @@ from Learners.CombinatorialLearner import CombinatorialLearner
 import plot
 
 
-def get_optimum(dic_budget):
+def get_optimum(dic_budget, cum_budget):
+    #print(dic_budget)
     reward_non_stationary = []
     l_tmp = [element[0] for element in dic_budget]
-    solver = KnapsackSolver(l_tmp)
+    solver = KnapsackSolver(l_tmp, cum_budget)
     for idx in range(len(dic_budget[0])):
         l_tmp = [element[idx] for element in dic_budget]
         reward_non_stationary.append(solver.solve(l_tmp)[1])
@@ -21,69 +21,51 @@ def get_optimum(dic_budget):
 
 if __name__ == "__main__":
 
-    config = SystemConfiguration.SystemConfiguration()
-
-    param_sub_c1 = config.init_sub_campaign("sub_campaign1")
-    budget_sub_c1 = np.linspace(param_sub_c1["min_budget"], param_sub_c1["max_budget"], param_sub_c1["n_arms"])
-    param_sub_c2 = config.init_sub_campaign("sub_campaign2")
-    budget_sub_c2 = np.linspace(param_sub_c2["min_budget"], param_sub_c2["max_budget"], param_sub_c2["n_arms"])
-    param_sub_c3 = config.init_sub_campaign("sub_campaign3")
-    budget_sub_c3 = np.linspace(param_sub_c3["min_budget"], param_sub_c3["max_budget"], param_sub_c3["n_arms"])
-
+    config = SysConfAdvSW.SysConfAdvSW("/home/mattia/PyProjects/DIA-Project/configuration/")
     sigma = config.init_noise()
-    t_horizon = config.init_advertising_experiment3()["t_horizon"]
-    n_experiment = config.init_advertising_experiment3()["n_experiment"]
-    window_size = int(np.sqrt(t_horizon))
-    func_c1_p1 = ClickFunction(*config.init_function("func_man_eu_p1"))
-    func_c1_p2 = ClickFunction(*config.init_function("func_man_eu_p2"))
-    func_c1_p3 = ClickFunction(*config.init_function("func_man_eu_p3"))
-    func_c2_p1 = ClickFunction(*config.init_function("func_man_usa_p1"))
-    func_c2_p2 = ClickFunction(*config.init_function("func_man_usa_p2"))
-    func_c2_p3 = ClickFunction(*config.init_function("func_man_usa_p3"))
-    func_c3_p1 = ClickFunction(*config.init_function("func_woman_p1"))
-    func_c3_p2 = ClickFunction(*config.init_function("func_woman_p2"))
-    func_c3_p3 = ClickFunction(*config.init_function("func_woman_p3"))
+    experiment_params = config.init_advertising_experiment()
+    window_size = 5*int(np.sqrt(experiment_params["t_horizon"]))
 
+    kernel = config.init_learner_kernel()
+    budget = config.budget_sub_campaign()
+    func_list = config.function()
+    function_plot = config.function_list_by_phase(func_list)
     combinatorial_reward_experiment = []
     sw_combinatorial_reward_experiment = []
     campaign = []
 
-    for i in range(0, n_experiment):
+    for i in range(0, experiment_params["n_experiment"]):
+        campaign = []
+        for idx in range(0, len(budget)):
+            campaign.append(NonStationaryBudgetEnvironment(budget[idx], sigma, func_list[idx],
+                                                           experiment_params["t_horizon"]))
 
-        sub_c1 = NonStationaryBudgetEnvironment(budget_sub_c1, sigma, [func_c1_p1, func_c1_p2, func_c1_p3], t_horizon)
-        sub_c2 = NonStationaryBudgetEnvironment(budget_sub_c2, sigma, [func_c2_p1, func_c2_p2, func_c2_p3], t_horizon)
-        sub_c3 = NonStationaryBudgetEnvironment(budget_sub_c3, sigma, [func_c3_p1, func_c3_p2, func_c3_p3], t_horizon)
+        learners = []
+        sw_learners = []
+        for k in range(0, len(budget)):
+            learners.append(GPTSLearner.GPTSLearner(len(budget[k]), budget[k], sigma, kernel[k][0], kernel[k][1]))
+            sw_learners.append(SWGPTSLearner.SWGPTSLearner(len(budget[k]), budget[k], sigma, kernel[k][0], kernel[k][1],
+                                                           window_size))
 
-        campaign = [sub_c1, sub_c2, sub_c3]
-        theta, l_scale = config.init_learner_kernel()
-        gpts_l1 = GPTSLearner.GPTSLearner(len(budget_sub_c1), budget_sub_c1, sigma, theta, l_scale)
-        gpts_l2 = GPTSLearner.GPTSLearner(len(budget_sub_c2), budget_sub_c2, sigma, theta, l_scale)
-        gpts_l3 = GPTSLearner.GPTSLearner(len(budget_sub_c3), budget_sub_c3, sigma, theta, l_scale)
-        learners = [gpts_l1, gpts_l2, gpts_l3]
+        comb_learner = CombinatorialLearner(campaign, learners, experiment_params["cum_budget"])
+        sw_comb_learner = CombinatorialLearner(campaign, sw_learners, experiment_params["cum_budget"])
 
-        theta, l_scale = config.init_learner_kernel()
-        sw_gpts_l1 = SWGPTSLearner.SWGPTSLearner(len(budget_sub_c1), budget_sub_c1, sigma, theta, l_scale, window_size)
-        sw_gpts_l2 = SWGPTSLearner.SWGPTSLearner(len(budget_sub_c2), budget_sub_c2, sigma, theta, l_scale, window_size)
-        sw_gpts_l3 = SWGPTSLearner.SWGPTSLearner(len(budget_sub_c3), budget_sub_c3, sigma, theta, l_scale, window_size)
-
-        sw_learners = [sw_gpts_l1, sw_gpts_l2, sw_gpts_l3]
-
-        comb_learner = CombinatorialLearner(campaign, learners)
-        sw_comb_learner = CombinatorialLearner(campaign, sw_learners)
-
-        for t in range(0, t_horizon):
+        for t in range(0, experiment_params["t_horizon"]):
             super_arm = comb_learner.knapsacks_solver()
             rewards = comb_learner.get_realization(super_arm)
-            comb_learner.update(super_arm, rewards)
-
+            comb_learner.update(super_arm, rewards, t)
             sw_super_arm = sw_comb_learner.knapsacks_solver()
             sw_rewards = sw_comb_learner.get_realization(sw_super_arm)
-            sw_comb_learner.update(sw_super_arm, sw_rewards)
-
+            sw_comb_learner.update(sw_super_arm, sw_rewards, t)
+            #if t % 20 == 0:
+                #tmp = 130
+                #sw_comb_learner.plot_regression(t, function_plot[int(t/tmp)])
+                #comb_learner.plot_regression(t, function_plot[int(t/tmp)])
         combinatorial_reward_experiment.append(comb_learner.collected_reward)
         sw_combinatorial_reward_experiment.append(sw_comb_learner.collected_reward)
         print(i)
 
-    optimum = get_optimum([campaign[0].list_clicks_budget, campaign[1].list_clicks_budget, campaign[2].list_clicks_budget])
-    print(optimum)
+    optimum = get_optimum([campaign[0].list_clicks_budget, campaign[1].list_clicks_budget,
+                           campaign[2].list_clicks_budget], experiment_params["cum_budget"])
+     #print(optimum)
     plot.plot_regret_comparison(optimum, combinatorial_reward_experiment, sw_combinatorial_reward_experiment)

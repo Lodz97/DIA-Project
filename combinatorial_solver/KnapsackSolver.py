@@ -22,7 +22,7 @@ class KnapsackSolver:
         each value. If a budget is not defined in a sub campaign, then the corresponding value is -infinite.
     """
 
-    def __init__(self, arms_dict):
+    def __init__(self, arms_dict, cumulative_budget):
         """
         :param arms_dict: list
             It is a list of dictionary: one dictionary for each sub campaign. The keys are the budgets associated to a
@@ -30,7 +30,7 @@ class KnapsackSolver:
         """
         self.budgets = {}
         self.sub_campaigns_matrix = []
-
+        self.__cumulative_budget = cumulative_budget
         self.__set_budgets(arms_dict)
 
     def __set_budgets(self, arms_dict):
@@ -46,6 +46,7 @@ class KnapsackSolver:
         budget = [element for sublist in arms_dict for element in sublist.keys()]
         if 0 not in budget:
             budget.append(0)
+        budget.append(self.__cumulative_budget)
         budget = np.unique(budget)                              # NB np.unique already returns the array sorted
 
         cross_prod = list(itertools.product(*[budget, budget]))
@@ -126,10 +127,10 @@ class KnapsackSolver:
         row = {}
 
         for b in self.budgets.keys():
-            if temp[b] == prev_row[b].value and temp[b] == -np.inf:
+            #if temp[b] == prev_row[b].value and temp[b] == -np.inf:
                 row[b] = Cell(-np.inf, np.zeros(0))
 
-            else:
+            #else:
                 cell_temp = []
                 comb_tmp = []
 
