@@ -50,28 +50,15 @@ def curve_woman():
     return parab_curve(p, d, "Woman")
 
 
-def interp_man_eu(pl):
-    x = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0])
-    y = np.array([70.0, 75.0, 60.0, 50.0, 80.0, 30.0, 15.0, 5.0, 0.0])
-    return show_interp(x, y, "European man", "Coversion rate", pl)
+def interpolate_curve(x_points, y_points):
+    f = interp1d(x_points, y_points, kind="quadratic")
+    return f
 
 
-def interp_man_usa(pl):
-    x = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0])
-    y = np.array([50.0, 50.0, 60.0, 30.0, 15.0, 10.0, 5.0, 2.0, 0.0])
-    return show_interp(x, y, "USA man", "Coversion rate", pl)
+def compute_aggregate_curve(rates, percentages):
+    tmp = [percentages[i]*rates[i] for i in range(0, len(percentages))]
 
-
-def interp_woman(pl):
-    x = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0])
-    y = np.array([30.0, 30.0, 20.0, 20.0, 5.0, 2.0, 11.0, 20.5, 0.0])
-    return show_interp(x, y, "Woman", "Coversion rate", pl)
-
-
-def interp_marginal_profit(pl):
-    x = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0])
-    y = np.array([-15.0, -9.0, 0.0, 5.0, 10.0, 25.0, 40.0, 35.0, 40.0])
-    return show_interp(x, y, "Marginal profit - Price", "Marginal profit", pl)
+    return np.cumsum(np.array(tmp), axis=0)[-1]
 
 
 def show_interp(x, y, title, ylabel, pl):
