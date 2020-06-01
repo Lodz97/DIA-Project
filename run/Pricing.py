@@ -1,14 +1,13 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from environment.PricingEnvironment import PricingEnvironment
 from learners.PricingTSLearner import PricingTSLearner
 from learners.PricingGreedyLearner import PricingGreedyLearner
 from environment.ConversionRate import *
 from configuration.SysConfPricing import SysConfPricing
+from utility import estimate_daily_n_click
 
 if __name__ == "__main__":
 
-    conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
+    conf = SysConfPricing("/home//orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
     profit_array = conf.get_profit()
     p = conf.get_aggregate_function()
     #   show_total_profit(conf.get_users_percentages())
@@ -16,6 +15,7 @@ if __name__ == "__main__":
     opt = np.max(profit_array * p)
 
     T, n_experiments = conf.get_experiment_info()
+    T = int(estimate_daily_n_click.n_click_for_days(T))
     ts_rewards_per_experiment = []
     gr_rewards_per_experiment = []
 
