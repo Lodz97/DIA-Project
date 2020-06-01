@@ -5,7 +5,6 @@ from environment.PricingTS_Learner import *
 from environment.PricingGreedyLearner import *
 from environment.ConversionRate import *
 
-
 # Possible prices
 price_array = np.array([20.0, 25.0, 30.0, 10, 15])
 # Percentage of user belonging to each class, depending on budget allocation, which is fixed
@@ -37,6 +36,9 @@ gr_rewards_per_experiment = []
 
 ts_rewards_per_experiment_multi = []
 
+low_bound_agg_avg = []
+low_bound_disagg_avg = []
+
 for e in range(0, n_experiments):
     env = PricingEnvironment(n_arms=n_arms, probabilities=p)
     ts_learner = PricingTSLearner(n_arms=n_arms, profit_array=profit_array)
@@ -55,6 +57,10 @@ for e in range(0, n_experiments):
     ts_learner_woman = PricingTSLearner(n_arms=n_arms, profit_array=profit_array)
     ts_learners = [ts_learner_eu, ts_learner_usa, ts_learner_woman]
 
+    low_bound_agg = np.array([])
+    low_bound_disagg = np.array([])
+    exp_revs = [[], [], [], []]
+
     for t in range(0, T):
         # Thompson Sampling Learner
         # Extract randomly from a disaggregate curve
@@ -63,21 +69,31 @@ for e in range(0, n_experiments):
         pulled_arm = ts_learner.pull_arm()
         reward = env.round(pulled_arm)
         ts_learner.update(pulled_arm, reward)
+        exp_revs[3].append(profit_array[pulled_arm] * reward)
         # Choose one of disaggregate learners
         pulled_arm = ts_learners[idx].pull_arm()
         reward = envs[idx].round(pulled_arm)
         ts_learners[idx].update(pulled_arm, reward)
         ts_learner_multi.update(pulled_arm, reward)
+        exp_revs[idx].append(profit_array[pulled_arm] * reward)
 
         # Greedy Learner
         pulled_arm = gr_learner.pull_arm()
         reward = env.round(pulled_arm)
         gr_learner.update(pulled_arm, reward)
 
+        if (t + 1) % 7 == 0:
+            low_bound_agg = np.append(low_bound_agg, np.mean(exp_revs[3]) * (1 - np.sqrt(-np.log(0.05) / (2 * (t + 1)))))
+            low_bound_disagg = np.append(low_bound_disagg, perc[0] * np.mean(exp_revs[0]) * (1 - np.sqrt(-np.log(0.05) / (2 * len(exp_revs[0])))) + \
+                              # perc[1] * np.mean(exp_revs[1]) - np.sqrt(-np.log(0.95) / (2 * len(exp_revs[1]))) + \
+                               perc[2] * np.mean(exp_revs[2]) * (1 - np.sqrt(-np.log(0.05) / (2 * len(exp_revs[2])))))
+
     ts_rewards_per_experiment.append(ts_learner.collected_rewards)
     ts_rewards_per_experiment_multi.append(ts_learner_multi.collected_rewards)
     gr_rewards_per_experiment.append(gr_learner.collected_rewards)
 
+    low_bound_agg_avg.append(low_bound_agg)
+    low_bound_disagg_avg.append(low_bound_disagg)
 
 plt.figure(0)
 plt.ylabel("Regret")
@@ -94,9 +110,17 @@ plt.xlabel("t")
 plot = np.array([])
 plot2 = np.array([])
 for t in range(0, T):
-    plot = np.append(plot, np.cumsum(np.mean(ts_rewards_per_experiment, axis=0))[t] / (t+1))
-    plot2 = np.append(plot2, np.cumsum(np.mean(ts_rewards_per_experiment_multi, axis=0))[t] / (t+1))
+    plot = np.append(plot, np.cumsum(np.mean(ts_rewards_per_experiment, axis=0))[t] / (t + 1))
+    plot2 = np.append(plot2, np.cumsum(np.mean(ts_rewards_per_experiment_multi, axis=0))[t] / (t + 1))
 plt.plot(plot, 'r')
 plt.plot(plot2, 'b')
 plt.legend(["TS_Aggregate", "TS_Discrimination"])
+plt.show()
+
+plt.figure(2)
+plt.ylabel("Reward Lower Bound")
+plt.xlabel("w")
+plt.plot((np.mean(low_bound_agg_avg, axis=0)), 'r')
+plt.plot((np.mean(low_bound_disagg_avg, axis=0)), 'b')
+plt.legend(["Lower bound aggregate", "Lower bound disaggregate"])
 plt.show()
