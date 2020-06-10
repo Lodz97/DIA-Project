@@ -19,3 +19,10 @@ def n_click_for_days(days):
     for i in range(0, days):
         tot_number.append([int(campaign[index].round(arms[index])) for index in range(0, len(campaign))])
     return tot_number
+
+
+def weight(population):
+    probability = []
+    for en in population:
+        probability.append(en / sum(population))
+    return probability

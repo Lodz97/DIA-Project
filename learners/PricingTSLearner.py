@@ -8,7 +8,7 @@ class PricingTSLearner(Learner):
     ----------
     beta_parameters : np.array
         beta distribution
-    profit_array : list[]
+    _arms: list[]
         marginal profit
     """
     def __init__(self, n_arms, arms):

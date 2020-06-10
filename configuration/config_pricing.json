@@ -8,9 +8,13 @@
     "man_eu": [70.0, 75.0, 60.0, 50.0, 80.0, 30.0, 15.0, 5.0, 0.0],
     "man_usa": [50.0, 50.0, 60.0, 30.0, 15.0, 10.0, 5.0, 2.0, 0.0]
   },
-  "experiment_info": {
+  "experiment_pricing_info": {
     "t_horizon": 7,
     "n_experiment": 500
+  },
+  "experiment_context_info": {
+    "t_horizon": 7,
+    "n_experiment": 100
   }
 
 

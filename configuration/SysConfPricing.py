@@ -31,6 +31,8 @@ class SysConfPricing:
     def get_arms_price(self):
         return self._prices
 
-    def get_experiment_info(self):
-        return self.data_config["experiment_info"]["t_horizon"], self.data_config["experiment_info"]["n_experiment"]
+    def get_experiment_pricing_info(self):
+        return self.data_config["experiment_pricing_info"]["t_horizon"], self.data_config["experiment_info"]["n_experiment"]
 
+    def get_experiment_context_info(self):
+        return self.data_config["experiment_context_info"]["t_horizon"], self.data_config["experiment_info"]["n_experiment"]

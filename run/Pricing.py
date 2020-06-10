@@ -4,26 +4,19 @@ from learners.PricingGreedyLearner import PricingGreedyLearner
 from environment.ConversionRate import *
 from configuration.SysConfPricing import SysConfPricing
 from utility import estimate_daily_n_click
-import random
+from utility.estimate_daily_n_click import weight
 import numpy as np
-
-
-def weight(population):
-    probability = []
-    for en in population:
-        probability.append(en / sum(population))
-    return probability
 
 
 if __name__ == "__main__":
 
     conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
-    profit_array = conf.get_profit()
-    arms_prob = conf.get_function()
+    profit_array = conf.get_profit() #not used
+    arms_prob = conf.get_function() #list prob of arms for each user
     arms = conf.get_arms_price()
 
     #   show_total_profit(conf.get_users_percentages())
-    T, n_experiments = conf.get_experiment_info()
+    T, n_experiments = conf.get_experiment_pricing_info()
     ts_rewards_per_experiment = []
     gr_rewards_per_experiment = []
     n_click = estimate_daily_n_click.n_click_for_days(T)
