@@ -1,6 +1,8 @@
 from environment import BudgetEnvironment
 from configuration import SysConfAdv
 
+""" This module compute the number of click generated in a fixed number of day given a set of budgets (arms)"""
+
 config = SysConfAdv.SysConfAdv("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
 budget = config.budget_sub_campaign()
 functions = config.function()
@@ -13,9 +15,7 @@ for idx in range(0, len(budget)):
 
 
 def n_click_for_days(days):
-    tot_number = 0
+    tot_number = []
     for i in range(0, days):
-        for index in range(0, len(campaign)):
-            tot_number += campaign[index].round(arms[index])
+        tot_number.append([int(campaign[index].round(arms[index])) for index in range(0, len(campaign))])
     return tot_number
-
