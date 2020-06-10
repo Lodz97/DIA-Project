@@ -53,3 +53,6 @@ if __name__ == "__main__":
                     context.update(map_env[i], pulled_arm, reward)
 
             collected_reward_week.append(context.collected_reward()) # ritornerà il reward del context attivo
+
+
+# sapendo il numero di esperimenti da collected_reward_week possiamo ricavare collected reward per experiment
