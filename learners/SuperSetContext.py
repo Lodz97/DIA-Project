@@ -1,32 +1,33 @@
 from learners.AggregateLearner import AggregateLearner
+import numpy as np
 
 
 class SuperSetContext:
     """
-    This class manages all the possible context (partition) that can be created through the two features
+    This class manages all the possible partitions that can be created through the two features
     """
-    def __init__(self, key_matrix, arms, active_context):
+    def __init__(self, key_matrix, arms, partition_context, confidence):
         """
         list[list[]]: param key_matrix: each element is a list of key to create the single aggregate
         list[] :param arms:
         """
-        self.__context = [AggregateLearner(key, arms) for key in key_matrix]
-        self.__active_context = active_context
+        self.__partition = [AggregateLearner(key, arms, confidence) for key in key_matrix]
+        self.active_partition = partition_context
 
     @property
-    def active_context(self):
-        return self.__active_context
+    def active_partition(self):
+        return self.__active_partition
 
-    @active_context.setter
-    def active_context(self, value):
-        self.__active_context = value
+    @active_partition.setter
+    def active_partition(self, value):
+        self.__active_partition = value
 
     def pull_arm(self, learner):
         """
         string :param learner: type of user on the site and so learner to be used inside the active context
         int :return : index pulled arm
         """
-        return self.__context[self.active_context].pull_arm(learner)
+        return self.__partition[self.active_partition].pull_arm(learner)
 
     def update(self, learner, pulled_arm, reward):
         """
@@ -34,11 +35,15 @@ class SuperSetContext:
         int :param pulled_arm: index pulled arm
         int :param reward: realization
         """
-        for aggregate_l in self.__context:
+        for aggregate_l in self.__partition:
             aggregate_l.update(learner, pulled_arm, reward)
 
     def collected_reward(self):
         """
         float :return: collected reward of the active context
         """
-        return self.__context[self.active_context].collected_reward()
+        return self.__partition[self.active_partition].collected_reward()
+
+    def select_active_partition(self):
+        partition_lb = [element.compute_lower_bound() for element in self.__partition]
+        self.active_partition = np.argmax(partition_lb)
