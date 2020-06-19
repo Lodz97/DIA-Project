@@ -1,8 +1,10 @@
 from learners.PricingTSLearner import PricingTSLearner
 from numpy import sqrt, log, cumsum
+
+
 class AggregateLearner:
     """
-    Represents the learners of a context
+    Represents a partition of the context generation algorithm. Each learner of this class represents a context.
     """
     def __init__(self, key_list, arms, confidence):
         self.__learner = {key: PricingTSLearner(len(arms), arms) for key in key_list}
