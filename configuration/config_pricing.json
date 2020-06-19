@@ -10,7 +10,7 @@
   },
   "experiment_pricing_info": {
     "t_horizon": 7,
-    "n_experiment": 500
+    "n_experiment": 10
   },
   "experiment_context_info": {
     "t_horizon": 7,
