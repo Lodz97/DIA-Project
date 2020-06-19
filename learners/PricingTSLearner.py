@@ -14,7 +14,6 @@ class PricingTSLearner(Learner):
     def __init__(self, n_arms, arms):
         super(PricingTSLearner, self).__init__(n_arms)
         self.beta_parameters = np.ones((n_arms, 2))
-        #self.profit_array = profit_array
         self._arms = arms
 
     def pull_arm(self):
@@ -29,3 +28,7 @@ class PricingTSLearner(Learner):
         # To update beta parameters use reward between [0, 1]
         self.beta_parameters[pulled_arm, 0] = self.beta_parameters[pulled_arm, 0] + reward
         self.beta_parameters[pulled_arm, 1] = self.beta_parameters[pulled_arm, 1] + 1.0 - reward
+
+    def get_reward_best_arm(self):
+        beta_means = self.beta_parameters[:, 0] / (self.beta_parameters[:, 0] + self.beta_parameters[:, 1])
+        return np.max(self._arms * beta_means)
