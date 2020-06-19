@@ -1,12 +1,12 @@
 from learners.PricingTSLearner import PricingTSLearner
-
-
+from numpy import sqrt, log, cumsum
 class AggregateLearner:
     """
     Represents the learners of a context
     """
-    def __init__(self, key_list, arms):
+    def __init__(self, key_list, arms, confidence):
         self.__learner = {key: PricingTSLearner(len(arms), arms) for key in key_list}
+        self.__confidence = confidence
 
     def select_learner(self, key_env):
         """
@@ -44,4 +44,16 @@ class AggregateLearner:
 
     def number_samples(self):
         n_samples = [learner._round for learner in self.__learner.values()]
-        return {self.__learner.keys(), n_samples}
+        return {key: n_samples[i] for i, key in enumerate(self.__learner.keys())}
+
+    def compute_lower_bound(self):
+        samples_for_learner = self.number_samples()
+        lower_bound = 0
+        total_n_samples = cumsum(samples_for_learner.values())
+        for element in samples_for_learner.items():
+            lower_bound += (self.__learner[element[0]].get_reward_best_arm() -
+                            sqrt(-log(self.__confidence)/element[1])) * element[1]/total_n_samples
+        return lower_bound
+
+
+
