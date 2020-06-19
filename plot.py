@@ -49,3 +49,10 @@ def plot_regret_comparison(opt_per_phase, reward_per_experiment, sw_reward_per_e
     plt.legend(loc='lower right')
     plt.show()
 
+
+def plot_cum_regret(opt, algorithm):
+    plt.figure(0)
+    plt.ylabel("Regret")
+    plt.xlabel("t")
+    plt.plot(np.cumsum(np.mean(opt - algorithm, axis=0)), 'r')
+    plt.show()

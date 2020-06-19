@@ -32,7 +32,11 @@ class SysConfPricing:
         return self._prices
 
     def get_experiment_pricing_info(self):
-        return self.data_config["experiment_pricing_info"]["t_horizon"], self.data_config["experiment_pricing_info"]["n_experiment"]
+        return self.data_config["experiment_pricing_info"]["t_horizon"], \
+               self.data_config["experiment_pricing_info"]["n_experiment"]
 
     def get_experiment_context_info(self):
-        return self.data_config["experiment_context_info"]["t_horizon"], self.data_config["experiment_pricing_info"]["n_experiment"]
+        return self.data_config["experiment_context_info"]["t_horizon"], \
+               self.data_config["experiment_context_info"]["n_experiment"], \
+               self.data_config["experiment_context_info"]["n_week"]
+
