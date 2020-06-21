@@ -11,7 +11,8 @@ class SuperSetContext:
         list[list[]]: param key_matrix: each element is a list of key to create the single aggregate
         list[] :param arms:
         """
-        self.__partition = [AggregateLearner(key, arms, confidence) for key in key_matrix]
+        self.__partition = [AggregateLearner(key_matrix[0], arms, confidence, True)]
+        self.__partition = self.__partition + [AggregateLearner(key, arms, confidence, False) for key in key_matrix[1:]]
         self.active_partition = partition_context
 
     @property
@@ -42,8 +43,12 @@ class SuperSetContext:
         """
         float :return: collected reward of the active context
         """
-        return self.__partition[self.active_partition].collected_reward()
+        return self.__partition[self.active_partition].collected_reward
 
     def select_active_partition(self):
         partition_lb = [element.compute_lower_bound() for element in self.__partition]
+        print(partition_lb)
         self.active_partition = np.argmax(partition_lb)
+
+    def print_active_partition(self):
+        self.__partition[self.__active_partition].print_partition_name()
