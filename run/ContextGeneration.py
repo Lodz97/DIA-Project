@@ -10,13 +10,12 @@ import plot
 
 if __name__ == "__main__":
 
-    conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
+    conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
     arms = conf.get_arms_price()
     arms_user_prob = conf.get_function()
 
     T, n_experiments, number_week = conf.get_experiment_context_info()
     string_partition = generate_context_feature()
-
 
     collected_reward_experiment = []
     prob_user_over_experiment = []
@@ -35,7 +34,6 @@ if __name__ == "__main__":
                 context.select_active_partition()
                 context.print_active_partition()
 
-            tmp_reward = []
             for t in range(0, T):
                 while click[t] != 0:  # the user of the day are not terminated
                     i = np.random.choice(a=string_partition[0], p=prob_user)
@@ -47,9 +45,10 @@ if __name__ == "__main__":
 
             collected_reward = collected_reward + context.collected_reward()
             prob_user_over_experiment.append(prob_user)
-        print(collected_reward)
+
         collected_reward_experiment.append(collected_reward)
 
+    print(collected_reward_experiment[0])
     prob_user_over_experiment = np.mean(prob_user_over_experiment, axis=0)
     opt = 0
     for i in range(0, len(prob_user_over_experiment)):

@@ -16,6 +16,7 @@ class AggregateLearner:
 
         self.__confidence = confidence
         self.collected_reward = []
+        self.arms = arms
 
     def select_learner(self, key_env):
         """
@@ -43,19 +44,20 @@ class AggregateLearner:
         int :param reward: realization
         """
         self.__learner[self.select_learner(learner)].update(pulled_arm, reward)
-        self.collected_reward.append(reward)
+        self.collected_reward.append(reward*self.arms[pulled_arm])
 
     def number_samples(self):
-        n_samples = [learner._round for learner in self.__learner.values()]
-        return {key: n_samples[key] for key in self.__learner.keys()}
+        return {key[0]: key[1]._round for key in self.__learner.items()}
 
     def compute_lower_bound(self):
         samples_for_learner = self.number_samples()
         lower_bound = 0
         total_n_samples = sum(samples_for_learner.values())
         for element in samples_for_learner.items():
-            lower_bound += (self.__learner[element[0]].get_reward_best_arm() -
-                            sqrt(-log(self.__confidence)/element[1])) * element[1]/total_n_samples
+            reward_best_arm, n_sample_arm = self.__learner[element[0]].get_reward_best_arm()
+            lower_bound += (reward_best_arm -
+                            sqrt(-log(self.__confidence)/(2*n_sample_arm))) * element[1]/total_n_samples
+        #    lower_bound += self.__learner[element[0]].get_reward_best_arm()* element[1]/total_n_samples
         return lower_bound
 
     def print_partition_name(self):
