@@ -10,7 +10,7 @@ import plot
 
 if __name__ == "__main__":
 
-    conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
     arms = conf.get_arms_price()
     arms_user_prob = conf.get_function()
 
@@ -23,12 +23,13 @@ if __name__ == "__main__":
 
     for e in range(0, n_experiments):
         environment = dict(zip(string_partition[0], [PricingEnvironment(n_arms=len(arms), probabilities=p) for p in arms_user_prob]))
-        context = SuperSetContext(string_partition, arms, 0)
+        context = SuperSetContext(string_partition, arms, 0, 0.95)
         for week in range(0, number_week):
             n_click = estimate_daily_n_click.n_click_for_days(T)
             click = np.array([sum(el) for el in n_click])  # total number of user each day
             prob_user = weight(np.mean(n_click, axis=0))
-            context.active_context()
+            if week != 0:
+                context.select_active_partition()
 
             tmp_reward = []
             for t in range(0, T):
