@@ -17,13 +17,13 @@ class SysConfPricing:
         return interpolate_curve(self._x_points, self.data_config["marginal_profit"])(self._prices)
 
     def get_aggregate_function(self, user_prob):
-        rates_tmp = [self.data_config["conversion_rate"][x] for x in ["woman", "man_eu", "man_usa"]]
+        rates_tmp = [self.data_config["conversion_rate"][x] for x in ["man_eu", "man_usa", "woman"]]
         factor = self.data_config["multiplying_factor"]
         rates = [interpolate_curve(self._x_points, rates_tmp[i])(self._prices)*factor for i in range(len(rates_tmp))]
         return compute_aggregate_curve(rates, user_prob)
 
     def get_function(self):
-        rates_tmp = [self.data_config["conversion_rate"][x] for x in ["woman", "man_eu", "man_usa"]]
+        rates_tmp = [self.data_config["conversion_rate"][x] for x in ["man_eu", "man_usa", "woman"]]
         factor = self.data_config["multiplying_factor"]
         rates = [interpolate_curve(self._x_points, rates_tmp[i])(self._prices) * factor for i in range(len(rates_tmp))]
         return rates
