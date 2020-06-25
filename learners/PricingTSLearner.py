@@ -33,5 +33,7 @@ class PricingTSLearner(Learner):
 
     def get_reward_best_arm(self):
         beta_means = self.beta_parameters[:, 0] / (self.beta_parameters[:, 0] + self.beta_parameters[:, 1])
-        idx = np.argmax(self._arms * beta_means)
-        return np.max(self._arms * beta_means), self.n_sample_arm[idx]
+        exp_reward = self._arms * beta_means
+        exp_reward = (exp_reward - np.mean(exp_reward))/(np.max(exp_reward) - np.min(exp_reward))
+        idx = np.argmax(exp_reward)
+        return np.max(exp_reward), self.n_sample_arm[idx]

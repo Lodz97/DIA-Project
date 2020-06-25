@@ -7,13 +7,15 @@ class AggregateLearner:
     Represents a partition of the context generation algorithm. Each learner of this class represents a context.
     """
     def __init__(self, key_list, arms, confidence, total_aggregate):
+        self.__learner = {}
+        self.__translator = {}
         if not total_aggregate:
-            self.__learner = {key: PricingTSLearner(len(arms), arms) for key in range(0, len(key_list))}
-            self.__translator = {key: key_list[key] for key in range(0, len(key_list))}
+            for key in range(0, len(key_list)):
+                self.__learner[key] = PricingTSLearner(len(arms), arms)
+                self.__translator[key] = key_list[key]
         else:
-            self.__learner = {0: PricingTSLearner(len(arms), arms)}
-            self.__translator = {0: key_list}
-
+            self.__learner[0] = PricingTSLearner(len(arms), arms)
+            self.__translator[0] = key_list
         self.__confidence = confidence
         self.collected_reward = []
         self.arms = arms
@@ -51,12 +53,13 @@ class AggregateLearner:
 
     def compute_lower_bound(self):
         samples_for_learner = self.number_samples()
+        #print(samples_for_learner)
         lower_bound = 0
         total_n_samples = sum(samples_for_learner.values())
         for element in samples_for_learner.items():
             reward_best_arm, n_sample_arm = self.__learner[element[0]].get_reward_best_arm()
-            lower_bound += (reward_best_arm -
-                            sqrt(-log(self.__confidence)/(2*n_sample_arm))) * element[1]/total_n_samples
+            lower_bound += (reward_best_arm * element[1]/total_n_samples)
+                            # - sqrt(-log(self.__confidence)/(2*n_sample_arm))) * element[1]/total_n_samples
         #    lower_bound += self.__learner[element[0]].get_reward_best_arm()* element[1]/total_n_samples
         return lower_bound
 
