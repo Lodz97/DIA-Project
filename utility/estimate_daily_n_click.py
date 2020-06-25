@@ -3,7 +3,7 @@ from configuration import SysConfAdv
 
 """ This module compute the number of click generated in a fixed number of day given a set of budgets (arms)"""
 
-config = SysConfAdv.SysConfAdv("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+config = SysConfAdv.SysConfAdv("/home/mattia/PyProjects/DIA-Project/configuration/")
 budget = config.budget_sub_campaign()
 functions = config.function()
 sigma = config.init_noise()
