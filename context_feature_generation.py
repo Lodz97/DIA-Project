@@ -1,6 +1,6 @@
 
 def generate_context_feature():
-    name = ["woman", "man_eu", "man_usa"]
+    name = ["man_eu", "man_usa", "woman"]
     feature_list = []
     for i in range(len(name)-1):
         for j in range(i+1, len(name)):
