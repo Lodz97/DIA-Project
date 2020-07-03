@@ -58,8 +58,11 @@ class AggregateLearner:
         total_n_samples = sum(samples_for_learner.values())
         for element in samples_for_learner.items():
             reward_best_arm, n_sample_arm = self.__learner[element[0]].get_reward_best_arm()
-            lower_bound += (reward_best_arm * element[1]/total_n_samples)
-                            # - sqrt(-log(self.__confidence)/(2*n_sample_arm))) * element[1]/total_n_samples
+            if n_sample_arm == 0:
+                print(self.__translator)
+                print(reward_best_arm)
+                print(self.__translator[element[0]])
+            lower_bound += (reward_best_arm - sqrt(-log(self.__confidence)/(2*n_sample_arm))) * element[1]/total_n_samples
         #    lower_bound += self.__learner[element[0]].get_reward_best_arm()* element[1]/total_n_samples
         return lower_bound
 

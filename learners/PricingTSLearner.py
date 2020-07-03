@@ -15,7 +15,7 @@ class PricingTSLearner(Learner):
         super(PricingTSLearner, self).__init__(n_arms)
         self.beta_parameters = np.ones((n_arms, 2))
         self._arms = arms
-        self.n_sample_arm = [0]*len(arms)
+        self.n_sample_arm = np.zeros(len(arms))
 
     def pull_arm(self):
         idx = np.argmax(self._arms * (np.random.beta(self.beta_parameters[:, 0],
@@ -36,4 +36,6 @@ class PricingTSLearner(Learner):
         exp_reward = self._arms * beta_means
         exp_reward = (exp_reward - np.mean(exp_reward))/(np.max(exp_reward) - np.min(exp_reward))
         idx = np.argmax(exp_reward)
+        if self.n_sample_arm[idx] == 0:
+            self.n_sample_arm[idx] = 1
         return np.max(exp_reward), self.n_sample_arm[idx]
