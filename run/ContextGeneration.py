@@ -6,25 +6,28 @@ import numpy as np
 from context_feature_generation import generate_context_feature
 from environment.PricingEnvironment import PricingEnvironment
 import plot
-
+from sklearn import preprocessing
 
 if __name__ == "__main__":
 
-    conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
+    conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
     arms = conf.get_arms_price()
+    arms = np.array(arms)
+    arms = arms / np.linalg.norm(arms)
+    #arms = preprocessing.normalize(arms).reshape(-1)
     arms_user_prob = conf.get_function()
 
     T, n_experiments, number_week = conf.get_experiment_context_info()
     string_partition = generate_context_feature()
 
     collected_reward_experiment = []
-    n_click = estimate_daily_n_click.n_click_for_days(7)
+    n_click = estimate_daily_n_click.n_click_for_days(15)
     click_average = np.array([sum(el) for el in n_click])  # total number of user each day
     prob_user = weight(np.mean(n_click, axis=0))
     optimum = []
     opt = []
     for i in range(0, len(prob_user)):
-        opt.append(np.max(arms_user_prob[i] * arms))
+        opt.append(max(arms_user_prob[i] * arms))
     opt = dict(zip(["man_eu", "man_usa", "woman"], opt))
 
     for e in range(0, n_experiments):
@@ -32,13 +35,13 @@ if __name__ == "__main__":
         print("EXP")
         collected_reward = []
         environment = dict(zip(["man_eu", "man_usa", "woman"], [PricingEnvironment(n_arms=len(arms), probabilities=p) for p in arms_user_prob]))
-        context = SuperSetContext(string_partition, arms, 4, 0.95)
+        context = SuperSetContext(string_partition, arms, 4, 0.05)
         for week in range(0, number_week):
             print("WEEK")
             context.print_active_partition()
             click = click_average.copy()
 
-            for t in range(0, 7):
+            for t in range(0, 15):
 
                 while click[t] != 0:  # the user of the day are not terminated
                     i = np.random.choice(a=string_partition[0], p=prob_user)
@@ -50,9 +53,10 @@ if __name__ == "__main__":
                     context.update(i, pulled_arm, reward)
                     opt_temp.append(opt[i])
 
-            context.select_active_partition()
+            #context.select_active_partition()
 
         collected_reward_experiment.append(collected_reward)
         optimum.append(opt_temp)
 
     plot.plot_cum_regret(np.array(optimum), np.array(collected_reward_experiment))
+    #plot.plot_cum_regret(opt, collected_reward_experiment)
