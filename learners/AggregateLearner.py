@@ -46,6 +46,8 @@ class AggregateLearner:
         int :param reward: realization
         """
         self.__learner[self.select_learner(learner)].update(pulled_arm, reward)
+        #print(self.__translator[self.select_learner(learner)])
+        #print(self.__learner[self.select_learner(learner)].get_reward())
         self.collected_reward.append(reward*self.arms[pulled_arm])
 
     def number_samples(self):
@@ -56,15 +58,14 @@ class AggregateLearner:
         #print(samples_for_learner)
         lower_bound = 0
         total_n_samples = sum(samples_for_learner.values())
+
         for element in samples_for_learner.items():
             reward_best_arm, n_sample_arm = self.__learner[element[0]].get_reward_best_arm()
-            if n_sample_arm == 0:
-                bandwidth = 10
-            else:
-                bandwidth = sqrt(-log(self.__confidence)/(2*(n_sample_arm+2)))
+            #bandwidth = sqrt(-log(self.__confidence)/(2*(n_sample_arm+2)))
+            #lower_bound += (reward_best_arm - bandwidth) * element[1]/total_n_samples
 
-            lower_bound += (reward_best_arm - bandwidth) * element[1]/total_n_samples
-        #    lower_bound += self.__learner[element[0]].get_reward_best_arm()* element[1]/total_n_samples
+            lower_bound += self.__learner[element[0]].get_reward_best_arm()[0]* element[1]/total_n_samples
+            #print(element[1]/total_n_samples)
         return lower_bound
 
     def print_partition_name(self):

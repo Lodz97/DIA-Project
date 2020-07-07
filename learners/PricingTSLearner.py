@@ -16,6 +16,7 @@ class PricingTSLearner(Learner):
         self.beta_parameters = np.ones((n_arms, 2))
         self._arms = arms
         self.n_sample_arm = np.zeros(len(arms))
+        self.means = np.ones(len(arms))*0.5
 
     def pull_arm(self):
         idx = np.argmax(self._arms * (np.random.beta(self.beta_parameters[:, 0],
@@ -30,11 +31,16 @@ class PricingTSLearner(Learner):
         # To update beta parameters use reward between [0, 1]
         self.beta_parameters[pulled_arm, 0] = self.beta_parameters[pulled_arm, 0] + reward
         self.beta_parameters[pulled_arm, 1] = self.beta_parameters[pulled_arm, 1] + 1.0 - reward
+        self.means[pulled_arm] = self.beta_parameters[pulled_arm, 0]/ (self.n_sample_arm[pulled_arm] + 2)
+        #print(self.means*self._arms)
 
     def get_reward_best_arm(self):
         beta_means = self.beta_parameters[:, 0] / (self.beta_parameters[:, 0] + self.beta_parameters[:, 1])
-        exp_reward = self._arms * beta_means
+        exp_reward = self._arms * self.means
         #exp_reward = (exp_reward - np.mean(exp_reward))/(np.max(exp_reward) - np.min(exp_reward))
         #exp_reward = exp_reward / np.linalg.norm(exp_reward)
         idx = np.argmax(exp_reward)
         return np.max(exp_reward), self.n_sample_arm[idx]
+
+    def get_reward(self):
+        return self.means*self._arms
