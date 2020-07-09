@@ -27,18 +27,18 @@ import plot
 def update_value_budget(value_click, campaign):
     tmp = []
     for i in range(0, len(value_click)):
-        dct = dict(zip(campaign[i].keys(), np.array(campaign[i].values()) * value_click[i]))
+        dct = dict(zip(campaign[i].clicks_budget.keys(), np.array(list(campaign[i].clicks_budget.values())) * value_click[i]))
         tmp.append(dct)
     return tmp
 
 
 if __name__ == "__main__":
-    pricing_conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    pricing_conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
     pricing_arms = pricing_conf.get_arms_price()
     arms_user_prob = [[0.5, 0.7, 0.9, 0.35, 0.2], [0.75, 0.9, 0.85, 0.8, 0.7], [0.95, 0.8, 0.2, 0.1, 0.05]]
     user_prob = [0.3, 0.5, 0.2]
 
-    config = SysConfAdv("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    config = SysConfAdv("/home/mattia/PyProjects/DIA-Project/configuration/")
 
     budget = config.budget_sub_campaign()
     functions = config.function()
@@ -56,7 +56,8 @@ if __name__ == "__main__":
         opt.append(max(np.array(arms_user_prob[i]) * pricing_arms))
 
     for n in range(0, N_OF_EXPERIMENTS):
-
+        print("EXP")
+        print(n)
         pricing_learner = AggregateLearner(key_list=[["man_usa"], ["man_eu"], ["woman"]], arms=pricing_arms, confidence=0,
                                        total_aggregate=False)   # NB confidence is not important for this point
         pricing_env = dict(zip(["man_eu", "man_usa", "woman"],
@@ -75,7 +76,8 @@ if __name__ == "__main__":
         collected_reward_adv = []
 
         for day in range(0, T_HORIZON):
-
+            print("DAY")
+            print(day)
             # pricing problem
             while daily_number_click != 0:  # the user of the day are not terminated
                 i = np.random.choice(a=["man_eu", "man_usa", "woman"], p=user_prob)
@@ -83,6 +85,7 @@ if __name__ == "__main__":
 
                 pulled_arm = pricing_learner.pull_arm(i)
                 reward = pricing_env[i].round(pulled_arm)
+                pricing_learner.update(i, pulled_arm, reward)
 
             value_click = pricing_learner.get_reward_best_arms()
             comb_learner.sc_value_per_click = value_click
@@ -91,7 +94,7 @@ if __name__ == "__main__":
             rewards = comb_learner.get_realization(bud_super_arm)
             comb_learner.update(bud_super_arm, rewards, day)
 
-            daily_number_click = sum(rewards)
+            daily_number_click = int(sum(rewards))
             user_prob = estimate_daily_n_click.weight(rewards)
             collected_reward_adv.append(sum([rewards[i] * value_click[i] for i in range(0, len(rewards))]))
 
