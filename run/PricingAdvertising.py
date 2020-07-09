@@ -8,7 +8,8 @@ from utility import estimate_daily_n_click
 from utility.estimate_daily_n_click import weight
 import numpy as np
 from learners.GPTSLearner import GPTSLearner
-
+from run.Advertising import get_optimum
+import plot
 ## CREATE
 ## total_disaggregate_learner ---> AggregateLearner
 ## pricing environment ---> PricingEnvironment
@@ -23,13 +24,21 @@ from learners.GPTSLearner import GPTSLearner
 ## 2) run advertising: estimate_of_click_number
 ## 3) solve optimization: optimal budget(and each sub campaign budget)
 
+def update_value_budget(value_click, campaign):
+    tmp = []
+    for i in range(0, len(value_click)):
+        dct = dict(zip(campaign[i].keys(), np.array(campaign[i].values()) * value_click[i]))
+        tmp.append(dct)
+    return tmp
+
+
 if __name__ == "__main__":
-    pricing_conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
+    pricing_conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
     pricing_arms = pricing_conf.get_arms_price()
     arms_user_prob = [[0.5, 0.7, 0.9, 0.35, 0.2], [0.75, 0.9, 0.85, 0.8, 0.7], [0.95, 0.8, 0.2, 0.1, 0.05]]
     user_prob = [0.3, 0.5, 0.2]
 
-    config = SysConfAdv("/home/mattia/PyProjects/DIA-Project/configuration/")
+    config = SysConfAdv("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
 
     budget = config.budget_sub_campaign()
     functions = config.function()
@@ -40,6 +49,11 @@ if __name__ == "__main__":
     campaign = []
     T_HORIZON = experiment_params["t_horizon"]      # n of days
     N_OF_EXPERIMENTS = experiment_params["n_experiment"]
+    combinatorial_reward_experiment = []
+
+    opt = []
+    for i in range(0, len(user_prob)):
+        opt.append(max(np.array(arms_user_prob[i]) * pricing_arms))
 
     for n in range(0, N_OF_EXPERIMENTS):
 
@@ -47,7 +61,7 @@ if __name__ == "__main__":
                                        total_aggregate=False)   # NB confidence is not important for this point
         pricing_env = dict(zip(["man_eu", "man_usa", "woman"],
                            [PricingEnvironment(n_arms=len(pricing_arms), probabilities=p) for p in arms_user_prob]))
-        daily_number_click = sum(estimate_daily_n_click.n_click_for_days(1))
+        daily_number_click = sum(estimate_daily_n_click.n_click_for_days(1)[0])
         campaign = []
         for idx in range(0, len(budget)):
             campaign.append(BudgetEnvironment(budget[idx], sigma, functions[idx]))
@@ -58,6 +72,8 @@ if __name__ == "__main__":
 
         comb_learner = CombinatorialLearner(campaign, learners, experiment_params["cum_budget"])
 
+        collected_reward_adv = []
+
         for day in range(0, T_HORIZON):
 
             # pricing problem
@@ -67,7 +83,26 @@ if __name__ == "__main__":
 
                 pulled_arm = pricing_learner.pull_arm(i)
                 reward = pricing_env[i].round(pulled_arm)
-            # select best arms + use value clicks
-            # advertising
-            # todo daily_number_click update
-            # todo user_prob update
+
+            value_click = pricing_learner.get_reward_best_arms()
+            comb_learner.sc_value_per_click = value_click
+
+            bud_super_arm = comb_learner.knapsacks_solver()
+            rewards = comb_learner.get_realization(bud_super_arm)
+            comb_learner.update(bud_super_arm, rewards, day)
+
+            daily_number_click = sum(rewards)
+            user_prob = estimate_daily_n_click.weight(rewards)
+            collected_reward_adv.append(sum([rewards[i] * value_click[i] for i in range(0, len(rewards))]))
+
+        combinatorial_reward_experiment.append(collected_reward_adv)
+
+    optimum = get_optimum(update_value_budget(opt, campaign),
+                          experiment_params["cum_budget"])
+
+    plot.plot_cum_regret(optimum, combinatorial_reward_experiment)
+
+
+
+
+

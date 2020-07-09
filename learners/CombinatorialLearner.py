@@ -34,7 +34,7 @@ class CombinatorialLearner:
         sample = []
         for idx in range(0, len(self.__gp_learner)):
             tmp = self.__gp_learner[idx].pull_arm()
-            dct = dict(zip(tmp.keys(), np.array(tmp.values())*self.sc_value_per_click[idx]))
+            dct = dict(zip(tmp.keys(), np.array(list(tmp.values()))*self.sc_value_per_click[idx]))
             sample.append(dct)
         return sample
 
