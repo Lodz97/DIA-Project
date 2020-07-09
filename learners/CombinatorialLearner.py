@@ -21,6 +21,7 @@ class CombinatorialLearner:
         self.__gp_learner = gp_learner
         self.collected_reward = []
         self.__knapsacks_solver = KnapsackSolver([x.clicks_budget for x in budget_environments], cum_budget)
+        self.sc_value_per_click = np.ones(len(gp_learner))
 
     def __set_super_arms(self):
         return [x.arms for x in self.__gp_learner]
@@ -31,8 +32,10 @@ class CombinatorialLearner:
             the expected number of click w.r.t the budgets for each sub campaigns
         """
         sample = []
-        for gpl in self.__gp_learner:
-            sample.append(gpl.pull_arm())
+        for idx in range(0, len(self.__gp_learner)):
+            tmp = self.__gp_learner[idx].pull_arm()
+            dct = dict(zip(tmp.keys(), np.array(tmp.values())*self.sc_value_per_click[idx]))
+            sample.append(dct)
         return sample
 
     def knapsacks_solver(self):
