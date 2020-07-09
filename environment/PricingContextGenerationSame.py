@@ -10,8 +10,8 @@ price_array = np.array([20.0, 25.0, 30.0, 10, 15])
 # Percentage of user belonging to each class, depending on budget allocation, which is fixed
 perc = [0.3, 0.5, 0.2]
 
-#profit_array = interp_marginal_profit(0)(price_array)
-profit_array = price_array
+profit_array = interp_marginal_profit(0)(price_array)
+#profit_array = price_array
 # Coversion rates corresponding to prices, give by appropriate function
 rate_man_eu = interp_man_eu(1)(price_array) / 100
 rate_man_usa = interp_man_usa(1)(price_array) / 100
@@ -30,8 +30,8 @@ opt_woman = np.max(profit_array * rate_woman)
 opts = [opt_eu, opt_usa, opt_woman]
 opt_multi = perc[0] * opt_eu + perc[1] * opt_usa + perc[2] * opt_woman
 
-T = 3000
-n_experiments = 20
+T = 10000
+n_experiments = 10
 ts_rewards_per_experiment = []
 gr_rewards_per_experiment = []
 
@@ -87,20 +87,64 @@ for e in range(0, n_experiments):
     context_array = np.array([])
 
     for t in range(0, T):
+        idx = np.random.choice(range(0, 3), p=perc)
+        if context == 0:
+            pulled_arm = ts_learner.pull_arm()
+            reward = envs[idx].round(pulled_arm)
+        if context == 1:
+            pulled_arm = ts_learners[idx].pull_arm()
+            reward = envs[idx].round(pulled_arm)
+        # Choose partially aggregate learners
+        if idx == 0:
+            # eu customer, update eu usa
+            if context == 2:
+                pulled_arm = ts_learners[3].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+            # eu customer, update eu woman
+            if context == 3:
+                pulled_arm = ts_learners[4].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+            # eu customer, update usa woman
+            if context == 4:
+                pulled_arm = ts_learners[idx].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+        if idx == 1:
+            # usa customer, update eu usa
+            if context == 2:
+                pulled_arm = ts_learners[3].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+            # usa customer, update eu woman
+            if context == 3:
+                pulled_arm = ts_learners[idx].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+            # usa customer, update usa woman
+            if context == 4:
+                pulled_arm = ts_learners[5].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+        if idx == 2:
+            # woman customer, update eu usa
+            if context == 2:
+                pulled_arm = ts_learners[idx].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+            # woman customer, update eu woman
+            if context == 3:
+                pulled_arm = ts_learners[4].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+            # woman customer, update usa woman
+            if context == 4:
+                pulled_arm = ts_learners[5].pull_arm()
+                reward = envs[idx].round(pulled_arm)
+
+
         # Thompson Sampling Learner
         # Extract randomly from a disaggregate curve
-        idx = np.random.choice(range(0, 3), p=perc)
+
         # Aggragate learner
-        pulled_arm = ts_learner.pull_arm()
-        #reward = env.round(pulled_arm)
-        reward = envs[idx].round(pulled_arm)
         ts_learner.update(pulled_arm, reward)
         if context == 0:
             ts_learner_multi_context.update(pulled_arm, reward)
         exp_revs[3].append(profit_array[pulled_arm] * reward)
         # Choose one of disaggregate learners
-        pulled_arm = ts_learners[idx].pull_arm()
-        reward = envs[idx].round(pulled_arm)
         ts_learners[idx].update(pulled_arm, reward)
         ts_learner_multi.update(pulled_arm, reward)
         if context == 1:
@@ -109,67 +153,55 @@ for e in range(0, n_experiments):
         # Choose partially aggregate learners
         if idx == 0:
             # eu customer, update eu usa
-            pulled_arm_agg = ts_learners[3].pull_arm()
-            reward_agg = envs[idx].round(pulled_arm_agg)
-            ts_learners[3].update(pulled_arm_agg, reward_agg)
-            ts_learner_multi_eu_usa.update(pulled_arm_agg, reward_agg)
+            ts_learners[3].update(pulled_arm, reward)
+            ts_learner_multi_eu_usa.update(pulled_arm, reward)
             if context == 2:
-                ts_learner_multi_context.update(pulled_arm_agg, reward_agg)
-            exp_revs[4].append(profit_array[pulled_arm_agg] * reward_agg)
+                ts_learner_multi_context.update(pulled_arm, reward)
+            exp_revs[4].append(profit_array[pulled_arm] * reward)
             # eu customer, update eu woman
-            pulled_arm_agg = ts_learners[4].pull_arm()
-            reward_agg = envs[idx].round(pulled_arm_agg)
-            ts_learners[4].update(pulled_arm_agg, reward_agg)
-            ts_learner_multi_eu_woman.update(pulled_arm_agg, reward_agg)
+            ts_learners[4].update(pulled_arm, reward)
+            ts_learner_multi_eu_woman.update(pulled_arm, reward)
             if context == 3:
-                ts_learner_multi_context.update(pulled_arm_agg, reward_agg)
-            exp_revs[5].append(profit_array[pulled_arm_agg] * reward_agg)
+                ts_learner_multi_context.update(pulled_arm, reward)
+            exp_revs[5].append(profit_array[pulled_arm] * reward)
             # eu customer, update usa woman
             ts_learner_multi_usa_woman.update(pulled_arm, reward)
             if context == 4:
                 ts_learner_multi_context.update(pulled_arm, reward)
         if idx == 1:
             # usa customer, update eu usa
-            pulled_arm_agg = ts_learners[3].pull_arm()
-            reward_agg = envs[idx].round(pulled_arm_agg)
-            ts_learners[3].update(pulled_arm_agg, reward_agg)
-            ts_learner_multi_eu_usa.update(pulled_arm_agg, reward_agg)
+            ts_learners[3].update(pulled_arm, reward)
+            ts_learner_multi_eu_usa.update(pulled_arm, reward)
             if context == 2:
-                ts_learner_multi_context.update(pulled_arm_agg, reward_agg)
-            exp_revs[4].append(profit_array[pulled_arm_agg] * reward_agg)
+                ts_learner_multi_context.update(pulled_arm, reward)
+            exp_revs[4].append(profit_array[pulled_arm] * reward)
             # usa customer, update eu woman
             ts_learner_multi_eu_woman.update(pulled_arm, reward)
             if context == 3:
                 ts_learner_multi_context.update(pulled_arm, reward)
             # usa customer, update usa woman
-            pulled_arm_agg = ts_learners[5].pull_arm()
-            reward_agg = envs[idx].round(pulled_arm_agg)
-            ts_learners[5].update(pulled_arm_agg, reward_agg)
-            ts_learner_multi_usa_woman.update(pulled_arm_agg, reward_agg)
+            ts_learners[5].update(pulled_arm, reward)
+            ts_learner_multi_usa_woman.update(pulled_arm, reward)
             if context == 4:
-                ts_learner_multi_context.update(pulled_arm_agg, reward_agg)
-            exp_revs[6].append(profit_array[pulled_arm_agg] * reward_agg)
+                ts_learner_multi_context.update(pulled_arm, reward)
+            exp_revs[6].append(profit_array[pulled_arm] * reward)
         if idx == 2:
             # woman customer, update eu usa
             ts_learner_multi_eu_usa.update(pulled_arm, reward)
             if context == 2:
                 ts_learner_multi_context.update(pulled_arm, reward)
             # woman customer, update eu woman
-            pulled_arm_agg = ts_learners[4].pull_arm()
-            reward_agg = envs[idx].round(pulled_arm_agg)
-            ts_learners[4].update(pulled_arm_agg, reward_agg)
-            ts_learner_multi_eu_woman.update(pulled_arm_agg, reward_agg)
+            ts_learners[4].update(pulled_arm, reward)
+            ts_learner_multi_eu_woman.update(pulled_arm, reward)
             if context == 3:
-                ts_learner_multi_context.update(pulled_arm_agg, reward_agg)
-            exp_revs[5].append(profit_array[pulled_arm_agg] * reward_agg)
+                ts_learner_multi_context.update(pulled_arm, reward)
+            exp_revs[5].append(profit_array[pulled_arm] * reward)
             # woman customer, update usa woman
-            pulled_arm_agg = ts_learners[5].pull_arm()
-            reward_agg = envs[idx].round(pulled_arm_agg)
-            ts_learners[5].update(pulled_arm_agg, reward_agg)
-            ts_learner_multi_usa_woman.update(pulled_arm_agg, reward_agg)
+            ts_learners[5].update(pulled_arm, reward)
+            ts_learner_multi_usa_woman.update(pulled_arm, reward)
             if context == 4:
-                ts_learner_multi_context.update(pulled_arm_agg, reward_agg)
-            exp_revs[6].append(profit_array[pulled_arm_agg] * reward_agg)
+                ts_learner_multi_context.update(pulled_arm, reward)
+            exp_revs[6].append(profit_array[pulled_arm] * reward)
 
         # Greedy Learner
         pulled_arm = gr_learner.pull_arm()
