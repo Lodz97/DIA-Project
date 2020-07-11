@@ -10,19 +10,7 @@ import numpy as np
 from learners.GPTSLearner import GPTSLearner
 from run.Advertising import get_optimum
 import plot
-## CREATE
-## total_disaggregate_learner ---> AggregateLearner
-## pricing environment ---> PricingEnvironment
-## advertising environment ---> BudgetEnvironment
-## adv learner ---> GPTSLearner
-## optimizer --> KnapsackSolver
-## run pricing with random number of users
 
-# loop
-## 0) advertising_environment: number of users per class
-## 1) run pricing day: value clicks (opt_price*conversion_rate)
-## 2) run advertising: estimate_of_click_number
-## 3) solve optimization: optimal budget(and each sub campaign budget)
 
 def update_value_budget(value_click, campaign):
     tmp = []
