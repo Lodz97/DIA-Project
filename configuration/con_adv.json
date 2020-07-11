@@ -31,8 +31,8 @@
     }
   },
   "Advertising_experiment": {
-    "t_horizon" : 50,
-    "n_experiment" : 20,
+    "t_horizon" : 30,
+    "n_experiment" : 150,
     "cum_budget": 150,
     "sigma": 5
   },

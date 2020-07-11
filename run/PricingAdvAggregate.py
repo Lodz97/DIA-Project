@@ -22,14 +22,14 @@ def update_value_budget(value_click, campaign):
 
 
 if __name__ == "__main__":
-    pricing_conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
+    pricing_conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
     pricing_arms = pricing_conf.get_arms_price()
     user_prob = [0.3, 0.5, 0.2]
     arms_user_prob = pricing_conf.get_aggregate_function(user_prob)
     disaggregate_user_prob = [[0.5, 0.7, 0.9, 0.35, 0.2], [0.75, 0.9, 0.85, 0.8, 0.7], [0.95, 0.8, 0.2, 0.1, 0.05]]
     print(arms_user_prob)
 
-    config = SysConfAdv("/home/mattia/PyProjects/DIA-Project/configuration/")
+    config = SysConfAdv("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
 
     budget = config.budget_sub_campaign()
     functions = config.function()
@@ -70,7 +70,6 @@ if __name__ == "__main__":
             for day in range(0, T_HORIZON):
                 #print("DAY")
                 #print(day)
-                # pricing problem
                 while daily_number_click != 0:  # the user of the day are not terminated
                     i = np.random.choice(a=["man_eu", "man_usa", "woman"], p=user_prob)
                     daily_number_click += -1
