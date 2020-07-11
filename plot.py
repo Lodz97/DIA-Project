@@ -56,3 +56,15 @@ def plot_cum_regret(opt, algorithm):
     plt.xlabel("t")
     plt.plot(np.cumsum(np.mean(opt - algorithm, axis=0)), 'r')
     plt.show()
+
+
+def plot_regret_per_arm(opt, algorithm, plot_info):
+    plt.figure(0)
+    plt.ylabel("Regret comparison")
+    plt.xlabel("Days")
+    arms = np.mean(algorithm, axis=0)
+    for element in range(0, len(plot_info)):
+        arm = plot_info[element]
+        plt.plot(np.cumsum(opt - arms[element]), label=u'{arm}'.format(arm=arm))
+        plt.legend(loc='best')
+    plt.show()

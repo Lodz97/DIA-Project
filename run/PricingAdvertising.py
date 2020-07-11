@@ -64,8 +64,8 @@ if __name__ == "__main__":
         collected_reward_adv = []
 
         for day in range(0, T_HORIZON):
-            print("DAY")
-            print(day)
+            #print("DAY")
+            #print(day)
             # pricing problem
             while daily_number_click != 0:  # the user of the day are not terminated
                 i = np.random.choice(a=["man_eu", "man_usa", "woman"], p=user_prob)
