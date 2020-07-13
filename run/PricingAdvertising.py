@@ -21,12 +21,12 @@ def update_value_budget(value_click, campaign):
 
 
 if __name__ == "__main__":
-    pricing_conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    pricing_conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
     pricing_arms = pricing_conf.get_arms_price()
     arms_user_prob = [[0.5, 0.7, 0.9, 0.35, 0.2], [0.75, 0.9, 0.85, 0.8, 0.7], [0.95, 0.8, 0.2, 0.1, 0.05]]
     user_prob = [0.3, 0.5, 0.2]
 
-    config = SysConfAdv("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    config = SysConfAdv("/home/mattia/PyProjects/DIA-Project/configuration/")
 
     budget = config.budget_sub_campaign()
     functions = config.function()
