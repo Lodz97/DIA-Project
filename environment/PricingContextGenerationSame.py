@@ -30,8 +30,8 @@ opt_woman = np.max(profit_array * rate_woman)
 opts = [opt_eu, opt_usa, opt_woman]
 opt_multi = perc[0] * opt_eu + perc[1] * opt_usa + perc[2] * opt_woman
 
-T = 10000
-n_experiments = 10
+T = 3000
+n_experiments = 30
 ts_rewards_per_experiment = []
 gr_rewards_per_experiment = []
 
@@ -256,7 +256,6 @@ plt.plot(np.cumsum(np.mean((opt - gr_rewards_per_experiment), axis=0)), 'g')
 plt.legend(["TS_Agg", "TS_Discrimination", "TS_Context", "Greedy"])
 plt.show()
 
-print("ciao")
 plt.figure(1)
 plt.ylabel("Expected reward")
 plt.xlabel("t")
@@ -290,3 +289,6 @@ plt.plot((np.mean(low_bound_agg_usa_woman_avg, axis=0)), 'm')
 plt.legend(["Lower bound aggregate", "Lower bound disaggregate", "Lower bound aggregate eu usa",
             "Lower bound aggregate eu woman", "Lower bound aggregate usa woman"])
 plt.show()
+
+
+
