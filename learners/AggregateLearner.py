@@ -60,11 +60,11 @@ class AggregateLearner:
         total_n_samples = sum(samples_for_learner.values())
 
         for element in samples_for_learner.items():
-            reward_best_arm, n_sample_arm = self.__learner[element[0]].get_reward_best_arm()
-            #bandwidth = sqrt(-log(self.__confidence)/(2*(n_sample_arm+2)))
-            #lower_bound += (reward_best_arm - bandwidth) * element[1]/total_n_samples
+            reward_best_arm, n_sample_arm, price = self.__learner[element[0]].get_reward_best_arm()
+            bandwidth = sqrt(-log(self.__confidence)/(2*n_sample_arm))*price
+            lower_bound += (reward_best_arm - bandwidth) * element[1]/total_n_samples
 
-            lower_bound += self.__learner[element[0]].get_reward_best_arm()[0]* element[1]/total_n_samples
+            #lower_bound += self.__learner[element[0]].get_reward_best_arm()[0]* element[1]/total_n_samples
             #print(element[1]/total_n_samples)
         return lower_bound
 
@@ -77,5 +77,6 @@ class AggregateLearner:
     def print_partition_name(self):
         print(self.__translator.values())
 
-
+    def get_partition_cardinality(self):
+        return len(self.__learner.keys())
 

@@ -25,7 +25,7 @@ class SysConfPricing:
     def get_function(self):
         rates_tmp = np.array([self.data_config["conversion_rate"][x] for x in ["man_eu", "man_usa", "woman"]])
         factor = self.data_config["multiplying_factor"]
-        rates = [rates_tmp[i] * factor for i in range(len(rates_tmp))]
+        rates = [interpolate_curve(self._x_points, rates_tmp[i])(self._prices) * factor for i in range(len(rates_tmp))]
         return rates
 
     def get_arms_price(self):

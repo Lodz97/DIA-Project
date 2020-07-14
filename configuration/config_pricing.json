@@ -5,17 +5,17 @@
   "multiplying_factor": 0.01,
   "conversion_rate": {
      "woman": [0.0, 90.0, 95.0, 80.0, 20.0, 10.0, 5.0, 2.0, 0.0],
-    "man_eu": [0.0, 40.0, 50.0, 70.0, 90.0, 35.0, 20.0, 15.0, 2.0],
-    "man_usa": [0.0, 70.0, 75.0, 90.0, 85.0, 80.0, 70.0, 35.0, 5.0]
+     "man_eu": [0.0, 40.0, 50.0, 70.0, 90.0, 35.0, 20.0, 15.0, 2.0],
+     "man_usa": [0.0, 70.0, 75.0, 90.0, 85.0, 80.0, 70.0, 35.0, 5.0]
   },
   "experiment_pricing_info": {
     "t_horizon": 7,
     "n_experiment": 300
   },
   "experiment_context_info": {
-    "t_horizon": 15,
-    "n_experiment": 25,
-    "n_week": 10
+    "t_horizon": 7,
+    "n_experiment": 50,
+    "n_week": 50
   }
 
 

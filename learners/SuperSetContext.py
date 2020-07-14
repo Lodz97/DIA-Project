@@ -48,7 +48,11 @@ class SuperSetContext:
     def select_active_partition(self):
         partition_lb = [element.compute_lower_bound() for element in self.__partition]
         print(partition_lb)
-        self.active_partition = np.argmax(partition_lb)
+        #self.print_active_partition()
+        idx_best_partition = np.argmax(partition_lb)
+        cardinality_active_partition = self.__partition[self.active_partition].get_partition_cardinality()
+        if self.__partition[idx_best_partition].get_partition_cardinality() > cardinality_active_partition:
+            self.active_partition = idx_best_partition
 
     def print_active_partition(self):
         self.__partition[self.__active_partition].print_partition_name()
