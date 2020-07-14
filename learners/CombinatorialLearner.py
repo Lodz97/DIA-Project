@@ -46,6 +46,14 @@ class CombinatorialLearner:
         samples = self.collect_sample()
         return self.__knapsacks_solver.solve(samples)[0]
 
+    def knapsacks_solver_value(self):
+        """
+        :return: tuple
+            the best super arm selected at the current round
+        """
+        samples = self.collect_sample()
+        return self.__knapsacks_solver.solve(samples)
+
     def get_realization(self, super_arm):
         """
         :param super_arm: tuple

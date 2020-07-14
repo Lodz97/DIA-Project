@@ -74,6 +74,12 @@ class AggregateLearner:
             tmp.append(self.__learner[self.select_learner(key)].get_reward_best_arm()[0])
         return tmp
 
+    def get_reward_arm(self, idx):
+        tmp = []
+        for key in ["man_eu", "man_usa", "woman"]:
+            tmp.append(self.__learner[self.select_learner(key)].get_reward()[idx])
+        return tmp
+
     def print_partition_name(self):
         print(self.__translator.values())
 
