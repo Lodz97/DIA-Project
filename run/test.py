@@ -1,60 +1,59 @@
-import operator
-import matplotlib.pyplot as plt
-from Learners.GPTSLearner import GPTSLearner
-from Learners.SWGPTSLearner import SWGPTSLearner
-from environment.BudgetEnvironment import BudgetEnvironment
+
 import numpy as np
-from environment.ClickFunction import ClickFunction
+from learners.GPTSLearner import GPTSLearner
+import matplotlib.pyplot as plt
+import BiddingEnv
+import GPTS
+def fun(x):
+    return 100 * (1.0 - np.exp(-4*x + 3*x**3))
+
 
 if __name__ == '__main__':
+    """x = np.array([5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0, 60.0])
+    y_woman = [90.0, 95.0, 80.0, 20.0, 10.0, 5.0, 2.0, 0.0, 0.0]
+    y_man_usa = [70.0, 75.0, 90.0, 85.0, 80.0, 70.0, 35.0, 5.0, 0.0]
+    y_man_eu = [40.0, 50.0, 70.0, 90.0, 35.0, 20.0, 15.0, 2.0, 0.0]
+    prices = [10, 15, 20.0, 25.0, 30.0, 35.0]
+    woman = interpolate_curve(x, y_woman)(prices) * 0.01 * prices
+    man_usa = interpolate_curve(x, y_man_usa)(prices) * 0.01 * prices
+    man_eu = interpolate_curve(x, y_man_eu)(prices) * 0.01 * prices
+    plt.plot(prices, woman, "r", label=u"woman")
+    plt.plot(prices, man_eu, "g", label=u"man_eu")
+    plt.plot(prices, man_usa, "b", label=u"man_usa")
+    plt.legend(loc='lower right')
+    plt.show()"""
 
-    budget_sub = np.linspace(10, 80, 8)
-    bdg_sub = list(budget_sub)
-    func = ClickFunction(250, 0.03)
-    sigma = 5
-    t_horizon = 80
-    theta, l_scale = 192277, 1.53
-    collected_reward = []
-    sw_collected_reward = []
-    optimum = func.apply_func(80)
+    #"woman": [90.0, 95.0, 80.0, 20.0, 10.0, 5.0, 2.0, 0.0, 0.0],
+    #"man_eu": [40.0, 50.0, 70.0, 90.0, 35.0, 20.0, 15.0, 2.0, 0.0],
+    #"man_usa": [70.0, 75.0, 90.0, 85.0, 80.0, 70.0, 35.0, 5.0, 0.0]
 
-    for n in range(100):
+    #"woman": [60.0, 70.0, 90.0, 20.0, 10.0, 5.0, 2.0, 0.0, 0.0],
+    #"man_eu": [40.0, 50.0, 70.0, 98.0, 35.0, 20.0, 15.0, 2.0, 0.0],
+    #"man_usa": [50.0, 60.0, 65.0, 75.0, 80.0, 90.0, 35.0, 5.0, 0.0]"
 
-        env = BudgetEnvironment(budget=budget_sub, sigma=sigma, func=func)
-        gpl = GPTSLearner(n_arms=len(budget_sub), arms=budget_sub, noise_std=sigma, kernel_theta=theta,
-                          len_scale=l_scale)
-        swgpl = SWGPTSLearner(n_arms=len(budget_sub), arms=budget_sub, noise_std=sigma, kernel_theta=theta,
-                              len_scale=l_scale, window_size=3*int(np.sqrt(t_horizon)))
-        for t in range(0, t_horizon):
-            pulled_arms = gpl.pull_arm()
-            sw_pulled_arms = swgpl.pull_arm()
-            # print("pulled arms")
-            # print(pulled_arms)
-            best_arm = int(max(pulled_arms.items(), key=operator.itemgetter(1))[0])
-            sw_best_arm = int(max(sw_pulled_arms.items(), key=operator.itemgetter(1))[0])
-            print(sw_best_arm)
+    n_arms = 20
+    min_bid = 0.0
+    max_bid = 1.0
+    bids = np.linspace(min_bid, max_bid, n_arms)
+    sigma = 10
 
-            idx_best_arm = bdg_sub.index(best_arm)
-            sw_idx_best_arm = bdg_sub.index(sw_best_arm)
-            reward = env.round(best_arm)
-            sw_reward = env.round(sw_best_arm)
-            """print("best arm")
-            print(best_arm)
-            print("sw best_arm")
-            print(sw_best_arm)"""
-            gpl.update(idx_best_arm, reward)
-            swgpl.update(sw_idx_best_arm, sw_reward)
-            swgpl.plot_process(func, t)
-        print(n)
+    T = 60
+    n_experiments = 100
+    gpts_reward_per_experiment = []
 
-        collected_reward.append(gpl._collected_rewards)
-        sw_collected_reward.append(swgpl._collected_rewards)
+    for e in range (0, n_experiments):
+        env = BiddingEnv.BiddingEnv(bids, sigma)
+        gpts_learner = GPTS.GPTS(n_arms, bids)
+
+        for t in range(0,T):
+            pulled_arm = gpts_learner.pull_arm()
+            print(pulled_arm)
+            reward = env.round(pulled_arm)
+            gpts_learner.update(pulled_arm,reward)
+
+        gpts_reward_per_experiment.append(gpts_learner._collected_rewards)
+
+    opt = np.max(env.means)
     plt.figure(0)
-    plt.ylabel("Regret")
-    plt.xlabel("t")
-    plt.plot(np.cumsum(np.mean(optimum - collected_reward, axis=0)), "r")
-    plt.plot(np.cumsum(np.mean(optimum - sw_collected_reward, axis=0)), "b")
+    plt.plot(np.cumsum(np.mean(opt - gpts_reward_per_experiment, axis=0)),'r')
     plt.show()
-
-
-

@@ -1,5 +1,5 @@
 from environment import BudgetEnvironment
-from Learners import CombinatorialLearner, GPTSLearner
+from learners import CombinatorialLearner, GPTSLearner
 from configuration import SysConfAdv
 from combinatorial_solver import KnapsackSolver
 import plot

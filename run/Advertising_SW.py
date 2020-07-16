@@ -1,9 +1,9 @@
 from configuration import SysConfAdvSW
 import numpy as np
 from environment.NonStationaryBudgetEnvironment import NonStationaryBudgetEnvironment
-from Learners import GPTSLearner, SWGPTSLearner
+from learners import GPTSLearner, SWGPTSLearner
 from combinatorial_solver.KnapsackSolver import KnapsackSolver
-from Learners.CombinatorialLearner import CombinatorialLearner
+from learners.CombinatorialLearner import CombinatorialLearner
 import plot
 
 
