@@ -30,8 +30,8 @@ opt_woman = np.max(profit_array * rate_woman)
 opts = [opt_eu, opt_usa, opt_woman]
 opt_multi = perc[0] * opt_eu + perc[1] * opt_usa + perc[2] * opt_woman
 
-T = 6000
-n_experiments = 10
+T = 10000
+n_experiments = 15
 ts_rewards_per_experiment = []
 gr_rewards_per_experiment = []
 
@@ -238,7 +238,7 @@ for e in range(0, n_experiments):
                     len(exp_revs[4]) != 0 and len(exp_revs[5]) != 0 and len(exp_revs[6]) != 0):
                 low_bound_agg = np.append(low_bound_agg, np.mean(exp_revs[3]) * (1 - np.sqrt(-np.log(0.05) / (2 * (t + 1)))))
                 low_bound_disagg = np.append(low_bound_disagg, perc[0] * np.mean(exp_revs[0]) * (1 - np.sqrt(-np.log(0.05) / (2 * len(exp_revs[0])))) + \
-                                   perc[1] * np.mean(exp_revs[1]) - np.sqrt(-np.log(0.95) / (2 * len(exp_revs[1]))) + \
+                                   perc[1] * np.mean(exp_revs[1]) * (1 - np.sqrt(-np.log(0.05) / (2 * len(exp_revs[1])))) + \
                                    perc[2] * np.mean(exp_revs[2]) * (1 - np.sqrt(-np.log(0.05) / (2 * len(exp_revs[2])))))
                 low_bound_agg_eu_usa = np.append(low_bound_agg_eu_usa, (perc[0] + perc[1]) * np.mean(exp_revs[4]) * (1 - np.sqrt(-np.log(0.05) / (2 * len(exp_revs[4])))) + \
                                    perc[2] * np.mean(exp_revs[2]) * (1 - np.sqrt(-np.log(0.05) / (2 * len(exp_revs[2])))))
@@ -254,7 +254,7 @@ for e in range(0, n_experiments):
                 low_bound_agg_usa_woman = np.append(low_bound_agg_usa_woman, 0)
 
             x = np.random.uniform(0, 1)
-            if x <= (1 - t / T):
+            if x <= (1 - t / T) < T/2:
                 context = np.random.randint(0, 5)
                 context_array = np.append(context_array, context)
             else:
@@ -289,6 +289,19 @@ plt.xlabel("t")
 plt.plot(np.cumsum(np.mean(opt_multi - ts_rewards_per_experiment_context, axis=0)), 'c')
 #plt.plot(np.cumsum(np.mean((opt_multi - gr_rewards_per_experiment), axis=0)), 'g')
 plt.legend(["TS_Context"])
+plt.show()
+
+plt.figure(50)
+plt.ylabel("Reward")
+plt.xlabel("t")
+plot = np.array([])
+plot2 = np.array([])
+for t in range(0, T):
+    plot = np.append(plot, np.cumsum(np.mean(ts_rewards_per_experiment_context, axis=0))[t] / (t + 1))
+    plot2 = np.append(plot2, opt_multi)
+plt.plot(plot, 'r')
+plt.plot(plot2, 'b')
+plt.legend(["TS_Context", "Clairvoyant"])
 plt.show()
 
 '''
@@ -328,7 +341,7 @@ plt.legend(["Lower bound aggregate", "Lower bound disaggregate", "Lower bound ag
 plt.show()
 
 
-
+'''
 for i in range (0, n_experiments):
     plt.figure(i + 3)
     plt.ylabel("Reward Lower Bound")
@@ -341,3 +354,4 @@ for i in range (0, n_experiments):
     plt.legend(["Lower bound aggregate", "Lower bound disaggregate", "Lower bound aggregate eu usa",
                 "Lower bound aggregate eu woman", "Lower bound aggregate usa woman"])
     plt.show()
+'''

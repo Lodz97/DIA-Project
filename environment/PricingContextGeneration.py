@@ -30,7 +30,7 @@ opt_woman = np.max(profit_array * rate_woman)
 opts = [opt_eu, opt_usa, opt_woman]
 opt_multi = perc[0] * opt_eu + perc[1] * opt_usa + perc[2] * opt_woman
 
-T = 3000
+T = 10000
 n_experiments = 10
 ts_rewards_per_experiment = []
 gr_rewards_per_experiment = []
