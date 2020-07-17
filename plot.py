@@ -12,7 +12,7 @@ def plot_regret_advertising(opt, reward_per_experiment):
     plt.figure(0)
     plt.ylabel("Regret")
     plt.xlabel("t")
-    plt.plot(np.cumsum(np.mean(opt - reward_per_experiment, axis=0)), "b")
+    plt.plot(np.cumsum(np.mean(opt - reward_per_experiment, axis=0)), "r")
 
     plt.figure(1)
     plt.ylabel("Reward")
@@ -28,7 +28,8 @@ def plot_regret_advertising(opt, reward_per_experiment):
 
 def plot_regret_comparison(opt_per_phase, reward_per_experiment, sw_reward_per_experiment):
     """
-        plot the comparison of the regret between the GPTS and SW_GPTS in a non stationary environment3
+        plot the comparison of the regret between the GPTS and SW_GPTS in a non stationary environment
+        and reward comparison
     """
     plt.figure(0)
     plt.ylabel("Regret")
@@ -47,6 +48,15 @@ def plot_regret_comparison(opt_per_phase, reward_per_experiment, sw_reward_per_e
     plt.plot(cum_regret, "r", label=u'Stationary Regret')
     plt.plot(sw_cum_regret, "b", label=u'SW Regret')
     plt.legend(loc='lower right')
+
+    plt.figure(2)
+    plt.ylabel("Reward")
+    plt.xlabel("t")
+    mean_reward = np.mean(sw_reward_per_experiment, axis=0)
+    opt_per_round = np.ones(len(mean_reward)) * opt_per_round
+    plt.plot(opt_per_round, 'r', label=u'Optimal Reward')
+    plt.plot(mean_reward, 'b', label=u'GPTS Reward')
+    plt.legend(loc='lower right')
     plt.show()
 
 
@@ -56,6 +66,33 @@ def plot_cum_regret(opt, algorithm):
     plt.xlabel("t")
     plt.plot(np.cumsum(np.mean(opt - algorithm, axis=0)), 'r')
     plt.show()
+
+    '''
+    mean_reward = np.mean(algorithm, axis=0)
+    mr_smooth = np.array([])
+    for t in range(0, len(mean_reward)):
+        mr_smooth = np.append(mr_smooth, np.cumsum(mean_reward)[t] / (t + 1))
+    opt = np.ones(len(mean_reward)) * opt
+    plt.figure(1)
+    plt.ylabel("Reward")
+    plt.xlabel("t")
+    plt.plot(opt, 'r', label=u'Optimal Reward')
+    plt.plot(mr_smooth, 'b', label=u'TS Reward')
+    plt.legend(loc='lower right')
+    '''
+
+    plt.figure(2)
+    plt.ylabel("Reward")
+    plt.xlabel("t")
+    mean_reward = np.mean(algorithm, axis=0)
+    opt = np.ones(len(mean_reward)) * opt
+    plt.plot(opt, 'r', label=u'Optimal Reward')
+    plt.plot(mean_reward, 'b', label=u'TS Reward')
+    plt.legend(loc='lower right')
+
+    plt.show()
+
+
 
 
 def plot_regret_per_arm(opt, algorithm, plot_info):

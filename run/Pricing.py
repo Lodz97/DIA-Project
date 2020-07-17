@@ -9,7 +9,7 @@ import numpy as np
 
 if __name__ == "__main__":
 
-    conf = SysConfPricing("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    conf = SysConfPricing("C:\\Users\\Giacomo\\PycharmProjects\\DIA-Project-GIT\\configuration\\")
     arms_prob = conf.get_function()
     arms = conf.get_arms_price()
 
