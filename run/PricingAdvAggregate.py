@@ -119,7 +119,7 @@ if __name__ == "__main__":
         optimum.append(get_optimum(update_value_budget(campaign, values[k]), experiment_params["cum_budget"]))
 
     opt = max(optimum)
-    plot.plot_cum_regret(opt, combinatorial_reward_experiment)
+    plot.plot_regret_advertising(opt, combinatorial_reward_experiment)
 
 
 

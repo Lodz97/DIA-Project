@@ -95,7 +95,7 @@ class AggregateLearner:
             a_idx, rev = self.__learner[self.select_learner(key)].pull_arm_with_values()
             revenues.append(rev)
             arms_idx.append(a_idx)
-        return a_idx, rev
+        return arms_idx, revenues
     
     def print_partition_name(self):
         print(self.__translator.values())
