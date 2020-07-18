@@ -22,7 +22,7 @@ if __name__ == "__main__":
     T, n_experiments = conf.get_experiment_pricing_info()
     ts_rewards_per_experiment = []
     gr_rewards_per_experiment = []
-    n_click = estimate_daily_n_click.n_click_for_days(T)
+    n_click = estimate_daily_n_click.n_click_for_days(T, path)
 
     prob_user = weight(np.mean(n_click, axis=0))
     p = conf.get_aggregate_function(prob_user)

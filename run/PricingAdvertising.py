@@ -57,7 +57,7 @@ if __name__ == "__main__":
                                        total_aggregate=False)   # NB confidence is not important for this point
         pricing_env = dict(zip(["man_eu", "man_usa", "woman"],
                            [PricingEnvironment(n_arms=len(pricing_arms), probabilities=p) for p in arms_user_prob]))
-        daily_number_click = sum(estimate_daily_n_click.n_click_for_days(1)[0])
+        daily_number_click = sum(estimate_daily_n_click.n_click_for_days(1, path)[0])
         campaign = []
         for idx in range(0, len(budget)):
             campaign.append(BudgetEnvironment(budget[idx], sigma, functions[idx]))

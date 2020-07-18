@@ -16,7 +16,7 @@ if __name__ == "__main__":
         print("ERROR: JSON path required")
         sys.exit(1)
 
-    conf = SysConfPricing("/configuration/")
+    conf = SysConfPricing(path + "/configuration/")
     arms = conf.get_arms_price()
     #arms = np.array(arms)
     #arms = arms / np.linalg.norm(arms)
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     string_partition = generate_context_feature()
 
     collected_reward_experiment = []
-    n_click = estimate_daily_n_click.n_click_for_days(T)
+    n_click = estimate_daily_n_click.n_click_for_days(T, path)
     click_average = np.array([sum(el) for el in n_click])  # total number of user each day
     prob_user = weight(np.mean(n_click, axis=0))
     print(prob_user)
