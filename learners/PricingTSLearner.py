@@ -44,3 +44,12 @@ class PricingTSLearner(Learner):
 
     def get_reward(self):
         return self.means*self._arms
+
+    def pull_arm_with_values(self):
+        samples = self._arms * (np.random.beta(self.beta_parameters[:, 0], self.beta_parameters[:, 1])).reshape(-1)
+        idx = np.argmax(samples)
+        return idx, samples[idx]
+
+    def pull_selected_arm_with_values(self, idx):
+        samples = self._arms * (np.random.beta(self.beta_parameters[:, 0], self.beta_parameters[:, 1])).reshape(-1)
+        return samples[idx]
