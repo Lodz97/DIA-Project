@@ -67,17 +67,18 @@ if __name__ == "__main__":
         comb_learner = CombinatorialLearner(campaign, learners, experiment_params["cum_budget"])
 
         collected_reward_adv = []
+        pulled_arm = {key: np.random.choice([i for i in range(0, len(pricing_arms))])
+                      for key in ["man_eu", "man_usa", "woman"]}
 
         for day in range(0, T_HORIZON):
             while daily_number_click != 0:  # the user of the day are not terminated
                 i = np.random.choice(a=["man_eu", "man_usa", "woman"], p=user_prob)
                 daily_number_click += -1
 
-                pulled_arm = pricing_learner.pull_arm(i)
-                reward = pricing_env[i].round(pulled_arm)
-                pricing_learner.update(i, pulled_arm, reward)
+                reward = pricing_env[i].round(pulled_arm[i])
+                pricing_learner.update(i, pulled_arm[i], reward)
 
-            value_click = pricing_learner.get_reward_best_arms()
+            arms_idx, value_click = pricing_learner.get_sample_best_arms()
             comb_learner.sc_value_per_click = value_click
 
             bud_super_arm = comb_learner.knapsacks_solver()
@@ -87,7 +88,8 @@ if __name__ == "__main__":
             daily_number_click = int(sum(rewards))
             user_prob = estimate_daily_n_click.weight(rewards)
             collected_reward_adv.append(sum([rewards[i] * value_click[i] for i in range(0, len(rewards))]))
-
+            for i,el in enumerate(["man_eu", "man_usa", "woman"]):
+                pulled_arm[el] = arms_idx[i]
         combinatorial_reward_experiment.append(collected_reward_adv)
 
     optimum = get_optimum(update_value_budget(opt, campaign),

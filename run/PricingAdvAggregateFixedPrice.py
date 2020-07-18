@@ -9,28 +9,10 @@ from utility import estimate_daily_n_click
 import numpy as np
 from learners.GPTSLearner import GPTSLearner
 from run.Advertising import get_optimum
+from run.PricingAdvAggregate import get_real_value_clicks
+from run.PricingAdvAggregate import update_value_budget
 import plot
 import sys
-
-
-def update_value_budget(campaign, value_click):
-    tmp = []
-    for i in range(0, len(campaign)):
-        dct = dict(zip(campaign[i].clicks_budget.keys(), np.array(list(campaign[i].clicks_budget.values()))
-                       * value_click[i]))
-        tmp.append(dct)
-    return tmp
-
-
-def get_real_value_clicks(disaggregate_user_prob, pricing_arms):
-    tmp = []
-    for k in range(0, len(disaggregate_user_prob)):
-        tmp.append(np.array(disaggregate_user_prob[k]) * np.array(pricing_arms))
-
-    value_click_arms = []
-    for idk in range(0, len(pricing_arms)):
-        value_click_arms.append([tmp[id][idk] for id in range(0, len(disaggregate_user_prob))])
-    return value_click_arms
 
 
 if __name__ == "__main__":
@@ -38,6 +20,7 @@ if __name__ == "__main__":
         path = sys.argv[1]
     else:
         sys.exit(1)
+
     pricing_conf = SysConfPricing(path + "/DIA-Project/configuration/")
     pricing_arms = pricing_conf.get_arms_price()
     user_prob = [0.3, 0.5, 0.2]
@@ -79,20 +62,20 @@ if __name__ == "__main__":
         comb_learner = CombinatorialLearner(campaign, learners, experiment_params["cum_budget"])
 
         collected_reward_adv = []
+        pulled_arm = np.random.choice([0, 1, 2, 3, 4])
 
         for day in range(0, T_HORIZON):
             while daily_number_click != 0:  # the user of the day are not terminated
                 i = np.random.choice(a=["man_eu", "man_usa", "woman"], p=user_prob)
                 daily_number_click += -1
 
-                pulled_arm = np.random.choice([0, 1, 2, 3, 4])
                 reward = pricing_env[i].round(pulled_arm)
                 pricing_learner_aggregate.update(pulled_arm, reward)
                 pricing_learner_disaggregate.update(i, pulled_arm, reward)
 
             value_click = []
             for j in range(0, len(pricing_arms)):
-                value_click.append(pricing_learner_disaggregate.get_reward_arm(j))
+                value_click.append(pricing_learner_disaggregate.get_reward_arm_from_sample(j))
 
             bud_super_arm = []
             value_number_click_arm = []
@@ -103,6 +86,7 @@ if __name__ == "__main__":
                 value_number_click_arm.append(temp2)
 
             idx_max = np.argmax(value_number_click_arm)
+            pulled_arm = idx_max
 
             rewards = comb_learner.get_realization(bud_super_arm[idx_max])
             comb_learner.update(bud_super_arm[idx_max], rewards, day)
@@ -121,8 +105,3 @@ if __name__ == "__main__":
 
     opt = max(optimum)
     plot.plot_regret_advertising(opt, combinatorial_reward_experiment)
-
-
-
-
-
