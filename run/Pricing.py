@@ -5,11 +5,17 @@ from configuration.SysConfPricing import SysConfPricing
 from utility import estimate_daily_n_click
 from utility.estimate_daily_n_click import weight
 import numpy as np
+import sys
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+    else:
+        print("ERROR: JSON path required")
+        sys.exit(1)
 
-    conf = SysConfPricing("C:\\Users\\Giacomo\\PycharmProjects\\DIA-Project-GIT\\configuration\\")
+    conf = SysConfPricing(path + "/configuration/")
     arms_prob = conf.get_function()
     arms = conf.get_arms_price()
 

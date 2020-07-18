@@ -5,7 +5,7 @@ from learners import GPTSLearner, SWGPTSLearner
 from combinatorial_solver.KnapsackSolver import KnapsackSolver
 from learners.CombinatorialLearner import CombinatorialLearner
 import plot
-
+import sys
 
 def get_optimum(dic_budget, cum_budget):
     #print(dic_budget)
@@ -20,8 +20,13 @@ def get_optimum(dic_budget, cum_budget):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+    else:
+        print("ERROR: JSON path required")
+        sys.exit(1)
 
-    config = SysConfAdvSW.SysConfAdvSW("C:\\Users\\Giacomo\\PycharmProjects\\DIA-Project-GIT\\configuration\\")
+    config = SysConfAdvSW.SysConfAdvSW(path + "/configuration/")
     sigma = config.init_noise()
     experiment_params = config.init_advertising_experiment()
     window_size = 4*int(np.sqrt(experiment_params["t_horizon"]))

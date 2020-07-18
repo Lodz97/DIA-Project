@@ -6,11 +6,17 @@ import numpy as np
 from context_feature_generation import generate_context_feature
 from environment.PricingEnvironment import PricingEnvironment
 import plot
+import sys
 from sklearn import preprocessing
 
 if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+    else:
+        print("ERROR: JSON path required")
+        sys.exit(1)
 
-    conf = SysConfPricing("C:\\Users\\Giacomo\\PycharmProjects\\DIA-Project-GIT\\configuration\\")
+    conf = SysConfPricing("/configuration/")
     arms = conf.get_arms_price()
     #arms = np.array(arms)
     #arms = arms / np.linalg.norm(arms)

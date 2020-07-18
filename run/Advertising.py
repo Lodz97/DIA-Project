@@ -3,6 +3,7 @@ from learners import CombinatorialLearner, GPTSLearner
 from configuration import SysConfAdv
 from combinatorial_solver import KnapsackSolver
 import plot
+import sys
 
 
 def get_optimum(dic_budget, cumulative_budget):
@@ -12,7 +13,13 @@ def get_optimum(dic_budget, cumulative_budget):
 
 
 if __name__ == "__main__":
-    config = SysConfAdv.SysConfAdv("C:\\Users\\Giacomo\\PycharmProjects\\DIA-Project-GIT\\configuration\\")
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+    else:
+        print("ERROR: JSON path required")
+        sys.exit(1)
+
+    config = SysConfAdv.SysConfAdv(path + "/configuration/")
 
     budget = config.budget_sub_campaign()
     functions = config.function()
