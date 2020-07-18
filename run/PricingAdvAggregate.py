@@ -6,7 +6,6 @@ from learners.PricingTSLearner import PricingTSLearner
 from learners.AggregateLearner import AggregateLearner
 from environment.PricingEnvironment import PricingEnvironment
 from utility import estimate_daily_n_click
-from utility.estimate_daily_n_click import weight
 import numpy as np
 from learners.GPTSLearner import GPTSLearner
 from run.Advertising import get_optimum
@@ -82,13 +81,10 @@ if __name__ == "__main__":
         collected_reward_adv = []
 
         for day in range(0, T_HORIZON):
-            #print("DAY")
-            #print(day)
             while daily_number_click != 0:  # the user of the day are not terminated
                 i = np.random.choice(a=["man_eu", "man_usa", "woman"], p=user_prob)
                 daily_number_click += -1
 
-                #pulled_arm = pricing_learner_aggregate.pull_arm()
                 pulled_arm = np.random.choice([0, 1, 2, 3, 4])
                 reward = pricing_env[i].round(pulled_arm)
                 pricing_learner_aggregate.update(pulled_arm, reward)

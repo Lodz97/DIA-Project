@@ -95,7 +95,7 @@ if __name__ == "__main__":
             user_prob = estimate_daily_n_click.weight(rewards)
 
             collected_reward_adv.append(sum([rewards[i] * value_click[idx_max][i] for i in range(0, len(rewards))]))
-            #print(sum([rewards[i] * value_click[idx_max][i] for i in range(0, len(rewards))]))
+
         combinatorial_reward_experiment.append(collected_reward_adv)
 
     values = get_real_value_clicks(disaggregate_user_prob, pricing_arms)
@@ -105,4 +105,3 @@ if __name__ == "__main__":
 
     opt = max(optimum)
     plot.plot_regret_advertising(opt, combinatorial_reward_experiment)
-    #plot.plot_cum_regret(opt, combinatorial_reward_experiment)
