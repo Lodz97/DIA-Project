@@ -80,6 +80,12 @@ class AggregateLearner:
             tmp.append(self.__learner[self.select_learner(key)].get_reward()[idx])
         return tmp
 
+    def get_reward_arm_from_sample(self, idx):
+        tmp = []
+        for key in ["man_eu", "man_usa", "woman"]:
+            tmp.append(self.__learner[self.select_learner(key)].pull_selected_arm_with_values(idx))
+        return tmp
+
     def get_sample_best_arms(self):
         """It returns the values of the best arm of each context and the arms themselves.
            The best arm is the one which has the bigger revenue, sampled by the beta distribution"""
@@ -89,7 +95,7 @@ class AggregateLearner:
             a_idx, rev = self.__learner[self.select_learner(key)].pull_arm_with_values()
             revenues.append(rev)
             arms_idx.append(a_idx)
-        return a_idx, rev
+        return arms_idx, revenues
     
     def print_partition_name(self):
         print(self.__translator.values())
