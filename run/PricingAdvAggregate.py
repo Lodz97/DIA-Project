@@ -37,6 +37,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         path = sys.argv[1]
     else:
+        print("ERROR: JSON path required")
         sys.exit(1)
     pricing_conf = SysConfPricing(path + "/DIA-Project/configuration/")
     pricing_arms = pricing_conf.get_arms_price()
