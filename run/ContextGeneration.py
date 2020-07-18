@@ -10,7 +10,7 @@ from sklearn import preprocessing
 
 if __name__ == "__main__":
 
-    conf = SysConfPricing("/home/mattia/PyProjects/DIA-Project/configuration/")
+    conf = SysConfPricing("C:\\Users\\Giacomo\\PycharmProjects\\DIA-Project-GIT\\configuration\\")
     arms = conf.get_arms_price()
     #arms = np.array(arms)
     #arms = arms / np.linalg.norm(arms)

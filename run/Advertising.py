@@ -12,7 +12,7 @@ def get_optimum(dic_budget, cumulative_budget):
 
 
 if __name__ == "__main__":
-    config = SysConfAdv.SysConfAdv("/home/orso/Documents/POLIMI/DataIntelligenceApplication/DIA-Project/configuration/")
+    config = SysConfAdv.SysConfAdv("C:\\Users\\Giacomo\\PycharmProjects\\DIA-Project-GIT\\configuration\\")
 
     budget = config.budget_sub_campaign()
     functions = config.function()
