@@ -66,3 +66,30 @@ We distinguish three different phases:
 * Phase 1: the launch of the product
 * Phase 2: the enter in the market of a new competitor
 * Phase 3: the updating of the product with new features to offer
+
+## Requirements
+To run the code, the  necessary libraries that has to be installed are listed in the requirements.txt file. Please pay attention that the code is tested only for versions of the libraires explicited in the file, for other version the functioning is not guaranteed.
+
+## How to run the code
+The "run" directory contains all the runnable files of the points of the project, especially there is a main file for each request of the project and has a dedicated configuration file. All the configuration files can be found in the "configuration" directory of this project. For each part of the project, the corresponding main file has to be called and the path of the configuration directory has to be specified as first parameter of the main file.
+In the following lines we provide a generic example, than for each part it is necessary to specify the corresponding main file and the path of the configuration directory:
+
+```bash
+$ python3 main.py /home/user/DIA-Project/
+```
+
+### Point 2
+The configuration specifics for this point are contained in the "con_adv.json" file. The main file is "Advertising.py"
+### Point 3
+The configuration specifics for this point are contained in the "conf_adv_sw.json" file. The main file is "Advertising_SW.py"
+### Point 4
+The configuration specifics for this point are contained in the "config_pricing.json" file. The main file is "Pricing.py"
+### Point 5
+The configuration specifics for this point are contained in the "config_pricing.json" file. The main file is "ContextGeneration.py"
+### Point 6
+The configuration specifics for this point are contained in the "con_adv.json" and "config_pricing.json" file. The main file of the first implementation is "PricingAdvertising.py".
+The second version main file is "PricAdvFixedPrice.py"
+### Point 7
+The configuration specifics for this point are contained in the "con_adv.json" and "config_pricing.json" file. The main file of the first implementation is "PricingAdvAggregate.py".
+The second version main file is "PricingAdvAggregateFixedPrice.py"
+
