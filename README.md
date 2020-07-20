@@ -71,7 +71,7 @@ We distinguish three different phases:
 To run the code, the  necessary libraries that has to be installed are listed in the "list_packages.txt" file. Please pay attention that the code is tested only for versions of the libraires explicited in the file, for other version the functioning is not guaranteed.
 
 ## How to run the code
-The "run" directory contains all the runnable files of the points of the project, especially there is a main file for each request of the project and has a dedicated configuration file. All the configuration files can be found in the "configuration" directory of this project. For each part of the project, the corresponding main file has to be called and the path of the configuration directory has to be specified as first parameter of the main file.
+The "run" directory contains all the runnable files of the points of the project(test.py and test_non_stat_bud_env.py files were used only for testing purposes, so please ignore them), especially there is a main file for each request of the project and has a dedicated configuration file. All the configuration files can be found in the "configuration" directory of this project. For each part of the project, the corresponding main file has to be called and the path of the configuration directory has to be specified as first parameter of the main file.
 In the following lines we provide a generic example, than for each part it is necessary to specify the corresponding main file and the path of the configuration directory:
 
 ```bash
