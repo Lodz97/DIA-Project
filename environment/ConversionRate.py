@@ -52,19 +52,22 @@ def curve_woman():
 
 def interp_man_eu(pl):
     x = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0])
-    y = np.array([70.0, 75.0, 60.0, 50.0, 80.0, 30.0, 15.0, 5.0, 0.0])
+    # y = np.array([70.0, 75.0, 60.0, 50.0, 80.0, 30.0, 15.0, 5.0, 0.0])
+    y = np.array([0.0, 40.0, 50.0, 70.0, 90.0, 35.0, 20.0, 15.0, 2.0])
     return show_interp(x, y, "European man", "Coversion rate", pl)
 
 
 def interp_man_usa(pl):
     x = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0])
-    y = np.array([50.0, 50.0, 60.0, 30.0, 15.0, 10.0, 5.0, 2.0, 0.0])
+    # y = np.array([50.0, 50.0, 60.0, 30.0, 15.0, 10.0, 5.0, 2.0, 0.0])
+    y = np.array([0.0, 70.0, 75.0, 90.0, 85.0, 80.0, 70.0, 35.0, 5.0])
     return show_interp(x, y, "USA man", "Coversion rate", pl)
 
 
 def interp_woman(pl):
     x = np.array([0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 50.0])
-    y = np.array([30.0, 30.0, 20.0, 20.0, 5.0, 2.0, 11.0, 20.5, 0.0])
+    # y = np.array([30.0, 30.0, 20.0, 20.0, 5.0, 2.0, 11.0, 20.5, 0.0])
+    y = np.array([0.0, 90.0, 95.0, 80.0, 20.0, 10.0, 5.0, 2.0, 0.0])
     return show_interp(x, y, "Woman", "Coversion rate", pl)
 
 

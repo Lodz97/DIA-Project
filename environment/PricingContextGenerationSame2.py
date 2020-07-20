@@ -6,12 +6,12 @@ from environment.PricingGreedyLearner import *
 from environment.ConversionRate import *
 
 # Possible prices
-price_array = np.array([20.0, 25.0, 30.0, 10, 15])
+price_array = np.array([10, 15, 20.0, 25.0, 30.0])
 # Percentage of user belonging to each class, depending on budget allocation, which is fixed
 perc = [0.3, 0.5, 0.2]
 
-profit_array = interp_marginal_profit(0)(price_array)
-#profit_array = price_array
+#profit_array = interp_marginal_profit(0)(price_array)
+profit_array = price_array
 # Coversion rates corresponding to prices, give by appropriate function
 rate_man_eu = interp_man_eu(1)(price_array) / 100
 rate_man_usa = interp_man_usa(1)(price_array) / 100
@@ -30,8 +30,8 @@ opt_woman = np.max(profit_array * rate_woman)
 opts = [opt_eu, opt_usa, opt_woman]
 opt_multi = perc[0] * opt_eu + perc[1] * opt_usa + perc[2] * opt_woman
 
-T = 10000
-n_experiments = 15
+T = 4000
+n_experiments = 50
 ts_rewards_per_experiment = []
 gr_rewards_per_experiment = []
 
@@ -48,6 +48,7 @@ low_bound_agg_eu_woman_avg = []
 low_bound_agg_usa_woman_avg = []
 
 for e in range(0, n_experiments):
+    print(e)
     env = PricingEnvironment(n_arms=n_arms, probabilities=p)
     ts_learner = PricingTSLearner(n_arms=n_arms, profit_array=profit_array)
     gr_learner = PricingGreedyLearner(n_arms=n_arms, profit_array=profit_array)
@@ -254,7 +255,7 @@ for e in range(0, n_experiments):
                 low_bound_agg_usa_woman = np.append(low_bound_agg_usa_woman, 0)
 
             x = np.random.uniform(0, 1)
-            if x <= (1 - t / T) < T/2:
+            if x <= (1 - t / T):
                 context = np.random.randint(0, 5)
                 context_array = np.append(context_array, context)
             else:
@@ -287,6 +288,17 @@ plt.xlabel("t")
 #plt.plot(np.cumsum(np.mean(opt_multi - ts_rewards_per_experiment, axis=0)), 'r')
 #plt.plot(np.cumsum(np.mean(opt_multi - ts_rewards_per_experiment_multi, axis=0)), 'b')
 plt.plot(np.cumsum(np.mean(opt_multi - ts_rewards_per_experiment_context, axis=0)), 'c')
+#plt.plot(np.cumsum(np.mean((opt_multi - gr_rewards_per_experiment), axis=0)), 'g')
+plt.legend(["TS_Context"])
+plt.show()
+
+plt.figure(0)
+plt.ylabel("Reward")
+plt.xlabel("t")
+#plt.plot(np.cumsum(np.mean(opt_multi - ts_rewards_per_experiment, axis=0)), 'r')
+#plt.plot(np.cumsum(np.mean(opt_multi - ts_rewards_per_experiment_multi, axis=0)), 'b')
+plt.plot(np.ones(T) * opt_multi, 'b')
+plt.plot((np.mean( ts_rewards_per_experiment_context, axis=0)), 'r')
 #plt.plot(np.cumsum(np.mean((opt_multi - gr_rewards_per_experiment), axis=0)), 'g')
 plt.legend(["TS_Context"])
 plt.show()
