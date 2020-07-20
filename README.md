@@ -68,7 +68,7 @@ We distinguish three different phases:
 * Phase 3: the updating of the product with new features to offer
 
 ## Requirements
-To run the code, the  necessary libraries that has to be installed are listed in the requirements.txt file. Please pay attention that the code is tested only for versions of the libraires explicited in the file, for other version the functioning is not guaranteed.
+To run the code, the  necessary libraries that has to be installed are listed in the "list_packages.txt" file. Please pay attention that the code is tested only for versions of the libraires explicited in the file, for other version the functioning is not guaranteed.
 
 ## How to run the code
 The "run" directory contains all the runnable files of the points of the project, especially there is a main file for each request of the project and has a dedicated configuration file. All the configuration files can be found in the "configuration" directory of this project. For each part of the project, the corresponding main file has to be called and the path of the configuration directory has to be specified as first parameter of the main file.
@@ -93,3 +93,9 @@ The second version main file is "PricAdvFixedPrice.py"
 The configuration specifics for this point are contained in the "con_adv.json" and "config_pricing.json" file. The main file of the first implementation is "PricingAdvAggregate.py".
 The second version main file is "PricingAdvAggregateFixedPrice.py"
 
+### Point 5 (v2.0)
+In the environment-dev branch, an additional version of the algorithm for this point can be found. In order to run this second version it is necessary to specify only the main file, no configuration file is needed.  So:
+
+```bash
+$ python3 PricingContextGenerationSame2.py 
+```
