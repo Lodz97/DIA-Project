@@ -303,42 +303,6 @@ plt.plot((np.mean( ts_rewards_per_experiment_context, axis=0)), 'r')
 plt.legend(["TS_Context"])
 plt.show()
 
-plt.figure(50)
-plt.ylabel("Reward")
-plt.xlabel("t")
-plot = np.array([])
-plot2 = np.array([])
-for t in range(0, T):
-    plot = np.append(plot, np.cumsum(np.mean(ts_rewards_per_experiment_context, axis=0))[t] / (t + 1))
-    plot2 = np.append(plot2, opt_multi)
-plt.plot(plot, 'r')
-plt.plot(plot2, 'b')
-plt.legend(["TS_Context", "Clairvoyant"])
-plt.show()
-
-'''
-print("ciao")
-plt.figure(1)
-plt.ylabel("Expected reward")
-plt.xlabel("t")
-plot = np.array([])
-plot2 = np.array([])
-plot3 = np.array([])
-plot4 = np.array([])
-plot5 = np.array([])
-for t in range(0, T):
-    plot = np.append(plot, np.cumsum(np.mean(ts_rewards_per_experiment, axis=0))[t] / (t + 1))
-    plot2 = np.append(plot2, np.cumsum(np.mean(ts_rewards_per_experiment_multi, axis=0))[t] / (t + 1))
-    plot3 = np.append(plot3, np.cumsum(np.mean(ts_rewards_per_experiment_eu_usa, axis=0))[t] / (t + 1))
-    plot4 = np.append(plot4, np.cumsum(np.mean(ts_rewards_per_experiment_eu_woman, axis=0))[t] / (t + 1))
-    plot5 = np.append(plot5, np.cumsum(np.mean(ts_rewards_per_experiment_usa_woman, axis=0))[t] / (t + 1))
-plt.plot(plot, 'r')
-plt.plot(plot2, 'b')
-plt.plot(plot3, 'g')
-plt.plot(plot4, 'c')
-plt.plot(plot5, 'm')
-plt.legend(["TS_Aggregate", "TS_Discrimination", "TS_Agg_eu_usa", "TS_Agg_eu_woman", "TS_Agg_usa_woman"])
-plt.show()'''
 
 plt.figure(2)
 plt.ylabel("Reward Lower Bound")
@@ -351,19 +315,3 @@ plt.plot((np.mean(low_bound_agg_usa_woman_avg, axis=0)), 'm')
 plt.legend(["Lower bound aggregate", "Lower bound disaggregate", "Lower bound aggregate eu usa",
             "Lower bound aggregate eu woman", "Lower bound aggregate usa woman"])
 plt.show()
-
-
-'''
-for i in range (0, n_experiments):
-    plt.figure(i + 3)
-    plt.ylabel("Reward Lower Bound")
-    plt.xlabel("w")
-    plt.plot(low_bound_agg_avg[i], 'r')
-    plt.plot(low_bound_disagg_avg[i],  'b')
-    plt.plot(low_bound_agg_eu_usa_avg[i],  'g')
-    plt.plot(low_bound_agg_eu_woman_avg[i], 'c')
-    plt.plot(low_bound_agg_usa_woman_avg[i],  'm')
-    plt.legend(["Lower bound aggregate", "Lower bound disaggregate", "Lower bound aggregate eu usa",
-                "Lower bound aggregate eu woman", "Lower bound aggregate usa woman"])
-    plt.show()
-'''
