@@ -18,7 +18,7 @@ rate_man_usa = interp_man_usa(1)(price_array) / 100
 rate_woman = interp_woman(1)(price_array) / 100
 # Combine curves
 p = (perc[0] * rate_man_eu + perc[1] * rate_man_usa + perc[2] * rate_woman)
-show_total_profit(perc)
+#show_total_profit(perc)
 # p = np.array([0.15, 0.1, 0.1, 0.35])  DIA video data
 n_arms = len(p)
 opt = np.max(profit_array * p)
